@@ -2,6 +2,7 @@
 using Business.ValidationRules;
 using DataAccess.Abstract;
 using Entities.Concrate;
+using Entities.DTOs;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -34,24 +35,29 @@ namespace Business.Concrate
             return _carDal.GetAll();
         }
 
-        public List<Car> GetById(int Id)
+        public List<Car> GetById(int ID)
         {
-           return _carDal.GetAll(p=>p.ID==Id);
+           return _carDal.GetAll(p=>p.CarID == ID);
         }
 
-        public List<Car> GetCarsByBrandId(int BrandId)
+        public List<Car> GetCarsByBrandId(int BrandID)
         {
-            return _carDal.GetAll(p => p.BrandId == BrandId);
+            return _carDal.GetAll(p => p.BrandID == BrandID);
         }
 
-        public List<Car> GetCarsByColorId(int ColorId)
+        public List<Car> GetCarsByColorId(int ColorID)
         {
-            return _carDal.GetAll(p => p.ColorId == ColorId);
+            return _carDal.GetAll(p => p.ColorID == ColorID);
         }
 
         public void Update(Car car)
         {
             _carDal.Update(car);
+        }
+
+        public List<CarDetailDto> GetCarDetail()
+        {
+            return _carDal.GetCarDetails();
         }
     }
 }
