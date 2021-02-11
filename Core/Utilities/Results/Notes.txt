@@ -1,0 +1,9 @@
+﻿Olay:
+Void için Result iişlem yap bitir mantığı 
+Geri dönüşlü metotlar için datalı DataResult döndürerek işlem yap mesaj gönder.
+
+default ayrımı default kelime olarak T türünün objesinin en temel hali
+değişkenlerin ise temel hali 
+örnek :
+string default empty
+T türünün defaultu object

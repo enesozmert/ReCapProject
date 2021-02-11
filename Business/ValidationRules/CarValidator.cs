@@ -11,12 +11,12 @@ namespace Business.ValidationRules
         public CarValidator()
         {
             RuleFor(t => t.DailyPrice).GreaterThan(0).WithMessage("0'dan büyük olmalı=> DailPrice");
-            RuleFor(t => t.Description).Must(DescriptionLength).WithMessage("Açıklama 2 karakterden büyük olmalıdır.=>Description");
+            RuleFor(t => t.Description).Must(DescriptionLengthWithTwo).WithMessage("Açıklama 2 karakterden büyük olmalıdır.=>Description");
         }
 
-        private bool DescriptionLength(string arg)
+        private bool DescriptionLengthWithTwo(string arg)
         {
-            return arg.Length >= 2;
+            return arg.Length > 2;
         }
     }
 }
