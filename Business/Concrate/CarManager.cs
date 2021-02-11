@@ -30,15 +30,15 @@ namespace Business.Concrate
             //{
             //    throw new ValidationException(result.Errors);
             //}
-            //ValidationTool.Validater(new CarValidator(),car);
+            
             _carDal.Add(car);
-            return new SuccessResult(Messages.CarAdded);
+            return ValidationTool.ValidaterVoid(new CarValidator(), car, Messages.CarAdded);
         }
 
         public IResult Delete(Car car)
         {
             _carDal.Delete(car);
-            return new SuccessResult(Messages.CarDeleted);
+            return ValidationTool.ValidaterVoid(new CarValidator(), car, Messages.CarDeleted);
         }
 
         public IDataResult<List<Car>> GetAll()
@@ -46,9 +46,9 @@ namespace Business.Concrate
             return new SuccessDataResult<List<Car>>(_carDal.GetAll());
         }
 
-        public IDataResult<List<Car>> GetById(int ID)
+        public IDataResult<Car> GetById(int carID)
         {
-            return new SuccessDataResult<List<Car>>(_carDal.GetAll(p => p.CarID == ID));
+            return new SuccessDataResult<Car>(_carDal.Get(p => p.ID == carID));
         }
 
         public IDataResult<List<Car>> GetCarsByBrandId(int BrandID)
@@ -64,7 +64,7 @@ namespace Business.Concrate
         public IResult Update(Car car)
         {
             _carDal.Update(car);
-            return new SuccessResult(Messages.CarUpdated);
+            return ValidationTool.ValidaterVoid(new CarValidator(), car, Messages.CarUpdated);
         }
 
         public IDataResult<List<CarDetailDto>> GetCarDetails()

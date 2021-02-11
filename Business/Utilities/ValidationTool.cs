@@ -11,14 +11,21 @@ namespace Business.ValidationRules
 {
     public static class ValidationTool
     {
-        public static void Validater(IValidator validator,object entities)
+        public static IResult ValidaterVoid(IValidator validator,object entities,string successMessage)
         {
-            var result = validator.Validate((IValidationContext)entities);
+            IResult _resultVoid = null;
+            var result = validator.Validate(entities);
             if (result.Errors.Count > 0)
             {
-                throw new ValidationException(result.Errors);
+                var exception = new ValidationException(result.Errors);
+                _resultVoid = new ErrorResult(exception.Message.ToString());
+                //throw new ValidationException(result.Errors);
             }
-
+            else
+            {
+                _resultVoid = new SuccessResult(successMessage);
+            }
+            return _resultVoid;
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Entities.Concrate
 
     public class Car:IEntity
     {
-        public int CarID { get; set; }
+        public int ID { get; set; }
         public int BrandID { get; set; }
         public int ColorID { get; set; }
         public int ModelYear { get; set; }

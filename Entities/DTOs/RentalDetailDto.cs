@@ -3,11 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Entities.Concrate
+namespace Entities.DTOs
 {
-    public class Color:IEntity
+    public class RentalDetailDto:IDto
     {
         public int ID { get; set; }
-        public string ColorName { get; set; }
+
+
     }
 }

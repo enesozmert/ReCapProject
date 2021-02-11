@@ -15,10 +15,10 @@ namespace DataAccess.Concrate
         public InMemoryCarDal()
         {
             _cars = new List<Car> {
-                new Car{CarID=1,BrandID=1,ColorID=1,DailyPrice=15,Description="ab",ModelYear=1999},
-                new Car{CarID=2,BrandID=2,ColorID=2,DailyPrice=10,Description="abc",ModelYear=1999},
-                new Car{CarID=3,BrandID=2,ColorID=3,DailyPrice=5,Description="abcd",ModelYear=1999},
-                new Car{CarID=4,BrandID=3,ColorID=3,DailyPrice=1,Description="abce",ModelYear=1999},
+                new Car{ID=1,BrandID=1,ColorID=1,DailyPrice=15,Description="ab",ModelYear=1999},
+                new Car{ID=2,BrandID=2,ColorID=2,DailyPrice=10,Description="abc",ModelYear=1999},
+                new Car{ID=3,BrandID=2,ColorID=3,DailyPrice=5,Description="abcd",ModelYear=1999},
+                new Car{ID=4,BrandID=3,ColorID=3,DailyPrice=1,Description="abce",ModelYear=1999},
             };
         }
         public void Add(Car car)
@@ -28,7 +28,7 @@ namespace DataAccess.Concrate
 
         public void Delete(Car car)
         {
-            Car carToDelete = _cars.SingleOrDefault(p => p.CarID == car.CarID);
+            Car carToDelete = _cars.SingleOrDefault(p => p.ID == car.ID);
             _cars.Remove(carToDelete);
         }
 
@@ -49,7 +49,7 @@ namespace DataAccess.Concrate
 
         public List<Car> GetById(int CarId)
         {
-            var ListedId= _cars.Where(p => p.CarID == CarId).ToList();
+            var ListedId = _cars.Where(p => p.ID == CarId).ToList();
             return ListedId;
         }
 
@@ -60,7 +60,7 @@ namespace DataAccess.Concrate
 
         public void Update(Car car)
         {
-            Car carToUpdate = _cars.SingleOrDefault(p=>p.CarID == car.CarID);
+            Car carToUpdate = _cars.SingleOrDefault(p => p.ID == car.ID);
             carToUpdate.ModelYear = car.ModelYear;
             carToUpdate.Description = car.Description;
             carToUpdate.DailyPrice = car.DailyPrice;
