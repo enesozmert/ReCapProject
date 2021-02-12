@@ -13,7 +13,8 @@ namespace Business.ValidationRules
             RuleFor(t => t.CarID).NotEmpty().WithMessage("boş olmamalı => CarID");
             RuleFor(t => t.CustomerID).NotEmpty().WithMessage("boş olmamalı => NotEmpty");
             RuleFor(t => t.IsEnabled).NotEmpty().WithMessage("boş olmamalı => IsEnabled");
-            RuleFor(t => t.ReturnDate).Must(ReturnDateIsNull).WithMessage("araba kiralandı => IsEnabled");
+            RuleFor(t => t.ReturnDate).Must(ReturnDateIsNull).WithMessage("araba kiralanamadı => IsEnabled");
+            RuleFor(t => t.ReturnDate).Empty().WithMessage("araba kiralanmış durumda => IsEnabled");
 
         }
 

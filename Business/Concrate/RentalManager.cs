@@ -4,6 +4,7 @@ using Business.ValidationRules;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrate;
 using DataAccess.Abstract;
+using DataAccess.Concrate.EntityFramework;
 using Entities.Concrate;
 using System;
 using System.Collections.Generic;
@@ -17,13 +18,21 @@ namespace Business.Concrate
 
         public RentalManager(IRentalDal rentalDal)
         {
+
             _rentalDal = rentalDal;
         }
 
         public IResult Add(Rental rental)
         {
-            _rentalDal.Add(rental);
-            return ValidationTool.ValidaterVoid(new RentalValidator(), rental, Messages.RentalAdd);
+            var verification = ValidationTool.ValidaterVoid(new RentalValidator(), rental, Messages.RentalAdd);
+            if (verification.Success == true)
+            {
+                if (rental.ReturnDate != null)
+                {
+                    _rentalDal.Add(rental);
+                }
+            }
+            return verification;
         }
 
         public IResult Delete(Rental rental)

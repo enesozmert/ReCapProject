@@ -1,4 +1,6 @@
-﻿using Business.Concrate;
+﻿using Business.Abstract;
+using Business.Concrate;
+using Business.DependencyResolvers.Ninject;
 using DataAccess.Concrate;
 using DataAccess.Concrate.EntityFramework;
 using Entities.Concrate;
@@ -8,47 +10,54 @@ namespace ConsoleUI
 {
     class Program
     {
+        private static ICarService _carService;
+        private static IUserService _userService;
+        private static IRentalService _rentalService;
         static void Main(string[] args)
         {
-            //Dependency injection // Ioc Container=>Ninject
-            Car car1 = new Car() { BrandID = 3, ColorID = 2, DailyPrice = 2, Description = "bcdea", ModelYear = 1990 };
+            
+            //string iDate = "2022-05-05";
+            //DateTime oDate = DateTime.Parse(iDate);
+            //Car car1 = new Car() { BrandID = 3, ColorID = 2, DailyPrice = 2, Description = "arenault", ModelYear = 2002 };
             //Car car2 = new Car() { BrandID = 1, ColorID =2 , DailyPrice = 111, Description = "yenieklendi", ModelYear = 1992 };
-            User user1 = new User { Email = "enes1@enes2.com", FirstName = "enes2", LastName = "abc1", NickName = "enes2abc1", Password = "abc1" };
-            //
-            string iDate = "2022-05-05";
-            DateTime oDate = DateTime.Parse(iDate);
-            //
-            Rental rental = new Rental { CarID = 13, CustomerID = 1002, RentDate = DateTime.Now.Date, ReturnDate = oDate, IsEnabled = true };
-            CarManager carManager = new CarManager(new EfCarDal());
-            //CarAdded(car1, carManager);
-            UserManager userManager = new UserManager(new EfUserDal());
-            //userManager.Add(user1);
-            RentalManager rentalManager = new RentalManager(new EfRentalDal());
-            //Console.WriteLine(rentalManager.Add(rental).Message);
-            var result = rentalManager.IsForRent(20);
-            if (result.Success == true)
-            {
-                rentalManager.IsForRent(20);
-                Console.WriteLine(rentalManager.IsForRent(20).Message);
-                Console.WriteLine(rentalManager.IsForRent(20).Data.ID);
-            }
-            else
-            {
-                Console.WriteLine(rentalManager.IsForRent(20).Message);
-            }
+            //User user1 = new User { Email = "enes1@enes2.com", FirstName = "enes2", LastName = "abc1", NickName = "enes2abc1", Password = "abc1" };
+            //Rental rental = new Rental { CarID = 13, CustomerID = 1002, RentDate = DateTime.Now.Date, ReturnDate = oDate, IsEnabled = true };
+            ////Dependency injection // Ioc Container=>Ninject
+            _carService = InstanceFactory.GetInstance<ICarService>(new BusinessModule());
+            _userService = InstanceFactory.GetInstance<IUserService>(new BusinessModule());
+            _rentalService = InstanceFactory.GetInstance<IRentalService>(new BusinessModule());
 
-            //rentalManager.IsForRent(1);
-            //CarDeatails(carManager);
+            //CarAdded(car1, _carService);
+            //_userService.Add(user1);
+            //Console.WriteLine(_rentalService.Add(rental).Message);
+            //IsForRent();
+            //_rentalService.IsForRent(1);
+            //CarDeatails(_carService);
 
         }
 
-        private static void CarDeatails(CarManager carManager)
+        private static void IsForRent()
         {
-            var result = carManager.GetCarDetails();
+            var result = _rentalService.IsForRent(20);
+            if (result.Success == true)
+            {
+                _rentalService.IsForRent(20);
+                Console.WriteLine(_rentalService.IsForRent(20).Message);
+                Console.WriteLine(_rentalService.IsForRent(20).Data.ID);
+            }
+            else
+            {
+                Console.WriteLine(_rentalService.IsForRent(20).Message);
+            }
+        }
+
+        private static void CarDeatails(ICarService carService)
+        {
+            var result = carService.GetCarDetails();
             if (result.Success == true)
             {
                 //carManager.Add(car1);
-                foreach (var item in carManager.GetCarDetails().Data)
+                foreach (var item in carService.GetCarDetails().Data)
                 {
                     Console.WriteLine(item.ID + "/" + item.DailyPrice + "/" + "=>" + item.ColorName + "/" + item.BrandName);
                 }
@@ -59,12 +68,12 @@ namespace ConsoleUI
             }
         }
 
-        private static void CarAdded(Car car1, CarManager carManager)
+        private static void CarAdded(Car car1, ICarService carService)
         {
             try
             {
                 //carManager.Add(car1);
-                Console.WriteLine(carManager.Add(car1).Message);
+                Console.WriteLine(carService.Add(car1).Message);
             }
             catch (Exception ex)
             {
