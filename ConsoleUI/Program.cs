@@ -11,17 +11,33 @@ namespace ConsoleUI
         static void Main(string[] args)
         {
             //Dependency injection // Ioc Container=>Ninject
-            Car car1 = new Car() { BrandID = 3, ColorID = 2, DailyPrice = 2, Description = "bcde", ModelYear = 1990 };
+            Car car1 = new Car() { BrandID = 3, ColorID = 2, DailyPrice = 2, Description = "bcdea", ModelYear = 1990 };
             //Car car2 = new Car() { BrandID = 1, ColorID =2 , DailyPrice = 111, Description = "yenieklendi", ModelYear = 1992 };
-            User user1 = new User { Email = "enes1@enes1.com", FirstName = "enes1", LastName = "abc", NickName = "enes1abc", Password = "abc" };
+            User user1 = new User { Email = "enes1@enes2.com", FirstName = "enes2", LastName = "abc1", NickName = "enes2abc1", Password = "abc1" };
             //
-            Rental rental = new Rental { CarID=11,CustomerID=1,RentDate=DateTime.Now.Date,ReturnDate=null,IsEnabled=false};
+            string iDate = "2022-05-05";
+            DateTime oDate = DateTime.Parse(iDate);
+            //
+            Rental rental = new Rental { CarID = 13, CustomerID = 1002, RentDate = DateTime.Now.Date, ReturnDate = oDate, IsEnabled = true };
             CarManager carManager = new CarManager(new EfCarDal());
+            //CarAdded(car1, carManager);
             UserManager userManager = new UserManager(new EfUserDal());
-            userManager.Add(user1);
+            //userManager.Add(user1);
             RentalManager rentalManager = new RentalManager(new EfRentalDal());
-            rentalManager.Add()
-            CarAdded(car1, carManager);
+            //Console.WriteLine(rentalManager.Add(rental).Message);
+            var result = rentalManager.IsForRent(20);
+            if (result.Success == true)
+            {
+                rentalManager.IsForRent(20);
+                Console.WriteLine(rentalManager.IsForRent(20).Message);
+                Console.WriteLine(rentalManager.IsForRent(20).Data.ID);
+            }
+            else
+            {
+                Console.WriteLine(rentalManager.IsForRent(20).Message);
+            }
+
+            //rentalManager.IsForRent(1);
             //CarDeatails(carManager);
 
         }

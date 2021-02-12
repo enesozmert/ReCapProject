@@ -26,8 +26,8 @@ namespace Business.Constant
         //public static string RentalDeletedInvalid = "Rental deleted invalided";
         internal static string RentalUpdate="Rental updated";
         //public static string RentalDeletedInvalid = "Rental updated invalided";
-        public static string IsForRent= "Rental";
-        public static string IsForRentInvalid= "Rental";
+        public static string IsForRent= "Rental is it for rent//araba teslim edildi";
+        public static string IsForRentInvalid= "Rental is it for rent invalied//araba teslim edilmedi";
 
     }
 }

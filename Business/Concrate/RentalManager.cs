@@ -47,11 +47,11 @@ namespace Business.Concrate
             IDataResult<Rental> dataResult = null;
             if (_rentalDal.Get(p => p.ID == rentalID).ReturnDate == null)
             {
-                dataResult = new ErrorDataResult<Rental>(_rentalDal.Get(p => p.ID == rentalID), Messages.IsForRent);
+                dataResult = new ErrorDataResult<Rental>(_rentalDal.Get(p => p.ID == rentalID), Messages.IsForRentInvalid);
             }
             else if (_rentalDal.Get(p => p.ID == rentalID).ReturnDate != null)
             {
-                dataResult = new SuccessDataResult<Rental>(_rentalDal.Get(p => p.ID == rentalID), Messages.IsForRentInvalid);
+                dataResult = new SuccessDataResult<Rental>(_rentalDal.Get(p => p.ID == rentalID), Messages.IsForRent);
             }
             return dataResult;
         }
