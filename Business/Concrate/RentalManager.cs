@@ -18,19 +18,15 @@ namespace Business.Concrate
 
         public RentalManager(IRentalDal rentalDal)
         {
-
             _rentalDal = rentalDal;
         }
 
         public IResult Add(Rental rental)
         {
-            var verification = ValidationTool.ValidaterVoid(new RentalValidator(), rental, Messages.RentalAdd);
+            var verification = ValidationTool.ValidaterVoid(new RentalValidator(rental), rental, Messages.RentalAdd);
             if (verification.Success == true)
             {
-                if (rental.ReturnDate != null)
-                {
-                    _rentalDal.Add(rental);
-                }
+                _rentalDal.Add(rental);
             }
             return verification;
         }
@@ -38,7 +34,7 @@ namespace Business.Concrate
         public IResult Delete(Rental rental)
         {
             _rentalDal.Delete(rental);
-            return ValidationTool.ValidaterVoid(new RentalValidator(), rental, Messages.RentalDelete);
+            return ValidationTool.ValidaterVoid(new RentalValidator(rental), rental, Messages.RentalDelete);
         }
 
         public IDataResult<List<Rental>> GetAll()
@@ -68,7 +64,7 @@ namespace Business.Concrate
         public IResult Update(Rental rental)
         {
             _rentalDal.Update(rental);
-            return ValidationTool.ValidaterVoid(new RentalValidator(), rental, Messages.RentalUpdate);
+            return ValidationTool.ValidaterVoid(new RentalValidator(rental), rental, Messages.RentalUpdate);
         }
     }
 }

@@ -8,13 +8,12 @@ namespace Business.ValidationRules
 {
     public class RentalValidator : AbstractValidator<Rental>
     {
-        public RentalValidator()
+        public RentalValidator(Rental rental)
         {
-            RuleFor(t => t.CarID).NotEmpty().WithMessage("boş olmamalı => CarID");
+            RuleFor(t => t.CarID).NotEmpty().WithMessage("boş olmamalı => NotEmpty");
             RuleFor(t => t.CustomerID).NotEmpty().WithMessage("boş olmamalı => NotEmpty");
-            RuleFor(t => t.IsEnabled).NotEmpty().WithMessage("boş olmamalı => IsEnabled");
-            RuleFor(t => t.ReturnDate).Must(ReturnDateIsNull).WithMessage("araba kiralanamadı => IsEnabled");
-            RuleFor(t => t.ReturnDate).Empty().WithMessage("araba kiralanmış durumda => IsEnabled");
+            RuleFor(k => k.CarID == rental.CarID && k.ReturnDate == null).Empty().WithMessage("bu araba kiralanmış durumda => NotEmpty");
+            //RuleFor(t => t.ReturnDate).Must(ReturnDateIsNull).WithMessage("araba kiralanmış durumda => ReturnDate");
 
         }
 
@@ -22,11 +21,11 @@ namespace Business.ValidationRules
         {
             if (arg == null)
             {
-                return true;
+                return false;
             }
             else
             {
-                return false;
+                return true;
             }
         }
     }
