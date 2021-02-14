@@ -7,12 +7,14 @@ using DataAccess.Abstract;
 using Entities.Concrate;
 using Entities.DTOs;
 using FluentValidation;
+using FluentValidation.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Business.Concrate
 {
+    [Validator(typeof(CarManager))]
     public class CarManager : ICarService
     {
         private delegate void DelegateValidator();
@@ -32,13 +34,13 @@ namespace Business.Concrate
             //}
             
             _carDal.Add(car);
-            return ValidationTool.ValidaterVoid(new CarValidator(), car, Messages.CarAdded);
+            return new SuccessResult(Messages.CarAdded);
         }
 
         public IResult Delete(Car car)
         {
             _carDal.Delete(car);
-            return ValidationTool.ValidaterVoid(new CarValidator(), car, Messages.CarDeleted);
+            return new SuccessResult(Messages.CarDeleted);
         }
 
         public IDataResult<List<Car>> GetAll()
@@ -64,7 +66,7 @@ namespace Business.Concrate
         public IResult Update(Car car)
         {
             _carDal.Update(car);
-            return ValidationTool.ValidaterVoid(new CarValidator(), car, Messages.CarUpdated);
+            return new SuccessResult(Messages.CarAdded);
         }
 
         public IDataResult<List<CarDetailDto>> GetCarDetails()

@@ -6,12 +6,14 @@ using Core.Utilities.Results.Concrate;
 using DataAccess.Abstract;
 using Entities.Concrate;
 using Entities.DTOs;
+using FluentValidation.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Business.Concrate
 {
+    [Validator(typeof(UserValidator))]
     public class UserManager : IUserService
     {
         IUserDal _userDal;
@@ -24,13 +26,13 @@ namespace Business.Concrate
         public IResult Add(User user)
         {
             _userDal.Add(user);
-            return ValidationTool.ValidaterVoid(new UserValidator(),user,Messages.UserAdded);
+            return new SuccessResult(Messages.UserAdded);
         }
 
         public IResult Delete(User user)
         {
             _userDal.Delete(user);
-            return ValidationTool.ValidaterVoid(new UserValidator(), user, Messages.UserDeleted);
+            return new SuccessResult(Messages.UserDeleted);
         }
 
         public IDataResult<List<User>> GetAll()
@@ -51,7 +53,7 @@ namespace Business.Concrate
         public IResult Update(User user)
         {
             _userDal.Update(user);
-            return ValidationTool.ValidaterVoid(new UserValidator(), user, Messages.UserUpdate);
+            return new SuccessResult(Messages.UserUpdate);
         }
     }
 }

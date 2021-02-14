@@ -16,24 +16,23 @@ namespace ConsoleUI
         private static IRentalService _rentalService;
         static void Main(string[] args)
         {
-            
-            string iDate = "2022-03-03";
+
+            string iDate = "2022-02-02";
             DateTime oDate = DateTime.Parse(iDate);
             //Car car1 = new Car() { BrandID = 3, ColorID = 2, DailyPrice = 2, Description = "arenault", ModelYear = 2002 };
             //Car car2 = new Car() { BrandID = 1, ColorID =2 , DailyPrice = 111, Description = "yenieklendi", ModelYear = 1992 };
             //User user1 = new User { Email = "enes1@enes2.com", FirstName = "enes2", LastName = "abc1", NickName = "enes2abc1", Password = "abc1" };
-            Rental rental = new Rental { CarID = 10, CustomerID = 2, RentDate = DateTime.Now.Date, ReturnDate = null, IsEnabled = false };
+            Rental rental = new Rental { CarID = 13, CustomerID = 2, RentDate = DateTime.Now.Date, ReturnDate = null, IsEnabled = false };
             ////Dependency injection // Ioc Container=>Ninject
             _carService = InstanceFactory.GetInstance<ICarService>(new BusinessModule());
             _userService = InstanceFactory.GetInstance<IUserService>(new BusinessModule());
             _rentalService = InstanceFactory.GetInstance<IRentalService>(new BusinessModule());
-
             //CarAdded(car1, _carService);
             //_userService.Add(user1);
             //_rentalService.Add(rental);
-            HandleException.Error(() => { Console.WriteLine(_rentalService.Add(rental).Message); });     
+            HandleException.Error(() => { Console.WriteLine(_rentalService.Add(rental).Message); });
             //IsForRent();
-            //_rentalService.IsForRent(1);
+            //Console.WriteLine(_rentalService.IsForRent(2017).Message);
             //CarDeatails(_carService);
 
         }

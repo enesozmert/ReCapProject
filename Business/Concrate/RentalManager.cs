@@ -6,12 +6,14 @@ using Core.Utilities.Results.Concrate;
 using DataAccess.Abstract;
 using DataAccess.Concrate.EntityFramework;
 using Entities.Concrate;
+using FluentValidation.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Business.Concrate
 {
+    [Validator(typeof(RentalValidator))]
     public class RentalManager : IRentalService
     {
         IRentalDal _rentalDal;
@@ -20,21 +22,44 @@ namespace Business.Concrate
         {
             _rentalDal = rentalDal;
         }
-
         public IResult Add(Rental rental)
         {
-            var verification = ValidationTool.ValidaterVoid(new RentalValidator(rental), rental, Messages.RentalAdd);
-            if (verification.Success == true)
+            #region ValidationToolToIResult
+            //var verification = ValidationTool.ValidaterVoid(new RentalValidator(rental), rental, Messages.RentalAdd);
+            //if (verification.Success == true)
+            //{
+            //    _rentalDal.Add(rental);
+            //}
+            //_rentalDal.Add(new Rental
+            //{
+            //    CarID = rental.CarID,
+            //    CustomerID = rental.CustomerID,
+            //    RentDate = DateTime.Now.Date,
+            //    ReturnDate = null
+            //});
+            //return verification;
+            #endregion
+
+            var result = _rentalDal.Get(k => k.CarID == rental.CarID && k.ReturnDate == null);
+            if (result.ReturnDate == null)
             {
-                _rentalDal.Add(rental);
+                return new ErrorResult(Messages.CarAddedInvalid);
             }
-            return verification;
+            _rentalDal.Add(new Rental
+            {
+                CarID = rental.CarID,
+                CustomerID = rental.CustomerID,
+                RentDate = DateTime.Now.Date,
+                ReturnDate = null
+            });
+
+            return new SuccessResult(Messages.RentalAdd);
         }
 
         public IResult Delete(Rental rental)
         {
             _rentalDal.Delete(rental);
-            return ValidationTool.ValidaterVoid(new RentalValidator(rental), rental, Messages.RentalDelete);
+            return new SuccessResult(Messages.RentalDelete);
         }
 
         public IDataResult<List<Rental>> GetAll()
@@ -64,7 +89,7 @@ namespace Business.Concrate
         public IResult Update(Rental rental)
         {
             _rentalDal.Update(rental);
-            return ValidationTool.ValidaterVoid(new RentalValidator(rental), rental, Messages.RentalUpdate);
+            return new SuccessResult(Messages.RentalUpdate);
         }
     }
 }
