@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.Attributes;
 using Business.Constant;
 using Business.ValidationRules;
 using Core.Utilities.Results.Abstract;
@@ -13,7 +14,7 @@ using System.Text;
 
 namespace Business.Concrate
 {
-    [Validator(typeof(RentalValidator))]
+    //[Validator(typeof(RentalValidator))]
     public class RentalManager : IRentalService
     {
         IRentalDal _rentalDal;
@@ -41,13 +42,11 @@ namespace Business.Concrate
             #endregion
 
             var result = _rentalDal.Get(k => k.CarID == rental.CarID && k.ReturnDate == null);
-            if (result.ReturnDate == null)
+            if (result != null)
             {
-                return new ErrorResult(Messages.CarAddedInvalid);
+                return new ErrorResult(Messages.RentalAddInvalid);
             }
-
-            _rentalDal.Add(rental);
-
+            _rentalDal.Add(result);
             return new SuccessResult(Messages.RentalAdd);
         }
 
@@ -85,7 +84,7 @@ namespace Business.Concrate
         {
             var result = _rentalDal.Get(r => r.CarID == rental.CarID && r.ReturnDate == null);
 
-            if (result != null) return new ErrorResult(Messages.RentalUpdate);
+            if (result != null) return new ErrorResult(Messages.RentalUpdatedInvalid);
 
             result.ReturnDate = DateTime.Now.Date;
             _rentalDal.Update(result);

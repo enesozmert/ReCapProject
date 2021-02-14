@@ -27,7 +27,8 @@ namespace Business.Constant
         #region RentalReg
         /**Rental Alanı**/
         public static string RentalAdd="Rental added";
-        //public static string RentalDeletedInvalid = "Rental added invalided";
+        public static string RentalAddInvalid= "Rental added invalided";
+        public static string RentalDeletedInvalid = "Rental added invalided";
         public static string RentalDelete="Rental deleted";
         //public static string RentalDeletedInvalid = "Rental deleted invalided";
         public static string RentalUpdate="Rental updated";

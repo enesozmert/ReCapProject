@@ -9,12 +9,12 @@ using System.Text;
 namespace Business.Attributes
 {
     [AttributeUsage(AttributeTargets.Method)]
-    public class RentAttributes:Attribute
+    public class RentValidationAttribute:Attribute
     {
        
-        public RentAttributes(Action action)
+        public RentValidationAttribute(Action action)
         {
-            
+            action.Invoke();
         }
     }
 }
