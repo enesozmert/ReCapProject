@@ -1,20 +1,27 @@
-﻿using Business.Constant;
+﻿using Business.Abstract;
+using Business.Concrate;
+using Business.Constant;
 using Core.Utilities.Results.Concrate;
 using DataAccess.Abstract;
 using Entities.Concrate;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace Business.Attributes
 {
     [AttributeUsage(AttributeTargets.Method)]
-    public class RentValidationAttribute:Attribute
+    public class RentalValidationAttribute : Attribute
     {
-       
-        public RentValidationAttribute(Action action)
+        IRentalService _rentalDal;
+
+        public RentalValidationAttribute(IRentalService rentalDal)
         {
-            action.Invoke();
+            _rentalDal = rentalDal;
+
+            //MethodInfo methodInfo = typeof(IRentalService).GetMethod("Add", new[] { typeof(string) });
+            //methodInfo.Invoke(new,new[],{ });
         }
     }
 }

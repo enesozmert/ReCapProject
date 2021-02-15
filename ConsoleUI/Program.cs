@@ -33,7 +33,7 @@ namespace ConsoleUI
             var result = _rentalService.Add(rental);
             if (result.Success)
             {
-                _rentalService.Add(rental);
+                HandleException.Error(() => { _rentalService.Add(rental); });
             }
             Console.WriteLine(result.Message);
             //HandleException.Error(() => { Console.WriteLine(result.Message); });
