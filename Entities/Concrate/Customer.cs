@@ -10,5 +10,6 @@ namespace Entities.Concrate
         public int ID { get; set; }
         public int UserID { get; set; }
         public string CompanyName { get; set; }
+        public Rental RentalProp { get; set; }
     }
 }

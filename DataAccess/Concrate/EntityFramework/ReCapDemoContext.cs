@@ -23,33 +23,28 @@ namespace DataAccess.Concrate.EntityFramework
         {
             modelBuilder
         .Entity<Rental>()
-        .HasOne(e => e)
-        .WithOne(e => e)
+        .HasOne(e => e.CustomerProp)
+        .WithOne(e => e.RentalProp)
         .OnDelete(DeleteBehavior.ClientCascade);
             modelBuilder
         .Entity<Customer>()
-        .HasOne(e => e)
-        .WithOne(e => e)
-        .OnDelete(DeleteBehavior.ClientCascade);
-            modelBuilder
-        .Entity<User>()
-        .HasOne(e => e)
-        .WithOne(e => e)
+        .HasOne(e => e.RentalProp)
+        .WithOne(e => e.CustomerProp)
         .OnDelete(DeleteBehavior.ClientCascade);
             modelBuilder
         .Entity<Car>()
-        .HasOne(e => e)
-        .WithOne(e => e)
+        .HasOne(e => e.BrandProp)
+        .WithOne(e => e.CarProp)
         .OnDelete(DeleteBehavior.ClientCascade);
-                   modelBuilder
+            modelBuilder
         .Entity<Color>()
-        .HasOne(e => e)
-        .WithOne(e => e)
+        .HasOne(e => e.CarProp)
+        .WithOne(e => e.ColorProp)
         .OnDelete(DeleteBehavior.ClientCascade);
-                   modelBuilder
+            modelBuilder
         .Entity<Brand>()
-        .HasOne(e => e)
-        .WithOne(e => e)
+        .HasOne(e => e.CarProp)
+        .WithOne(e => e.BrandProp)
         .OnDelete(DeleteBehavior.ClientCascade);
         }
     }

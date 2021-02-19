@@ -13,5 +13,7 @@ namespace Entities.Concrate
         public DateTime RentDate { get; set; }
         public DateTime? ReturnDate { get; set; }
         public bool IsEnabled { get; set; }
+        public Car CarProp { get; set; }
+        public Customer CustomerProp { get; set; }
     }
 }

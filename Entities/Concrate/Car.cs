@@ -15,5 +15,8 @@ namespace Entities.Concrate
         public int ModelYear { get; set; }
         public int DailyPrice { get; set; }
         public string Description { get; set; }
+        public Brand BrandProp { get; set; }
+        public Color ColorProp { get; set; }
+        public Rental RentalProp { get; set; }
     }
 }

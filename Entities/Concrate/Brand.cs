@@ -10,5 +10,6 @@ namespace Entities.Concrate
     {
         public int ID { get; set; }
         public string BrandName { get; set; }
+        public Car CarProp { get; set; }
     }
 }

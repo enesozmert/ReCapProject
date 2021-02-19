@@ -9,5 +9,6 @@ namespace Entities.Concrate
     {
         public int ID { get; set; }
         public string ColorName { get; set; }
+        public Car CarProp { get; set; }
     }
 }
