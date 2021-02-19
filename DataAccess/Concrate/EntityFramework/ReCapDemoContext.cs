@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DataAccess.Concrate.EntityFramework
 {
-    public class ReCapDemoContext:DbContext
+    public class ReCapDemoContext : DbContext
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -21,9 +21,36 @@ namespace DataAccess.Concrate.EntityFramework
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Car>().ToTable("Colors");
-            //modelBuilder.Entity<Car>().Property(p=>p.ColorID).HasColumnName("ID");
-
+            modelBuilder
+        .Entity<Rental>()
+        .HasOne(e => e)
+        .WithOne(e => e)
+        .OnDelete(DeleteBehavior.ClientCascade);
+            modelBuilder
+        .Entity<Customer>()
+        .HasOne(e => e)
+        .WithOne(e => e)
+        .OnDelete(DeleteBehavior.ClientCascade);
+            modelBuilder
+        .Entity<User>()
+        .HasOne(e => e)
+        .WithOne(e => e)
+        .OnDelete(DeleteBehavior.ClientCascade);
+            modelBuilder
+        .Entity<Car>()
+        .HasOne(e => e)
+        .WithOne(e => e)
+        .OnDelete(DeleteBehavior.ClientCascade);
+                   modelBuilder
+        .Entity<Color>()
+        .HasOne(e => e)
+        .WithOne(e => e)
+        .OnDelete(DeleteBehavior.ClientCascade);
+                   modelBuilder
+        .Entity<Brand>()
+        .HasOne(e => e)
+        .WithOne(e => e)
+        .OnDelete(DeleteBehavior.ClientCascade);
         }
     }
 }

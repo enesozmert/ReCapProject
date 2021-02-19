@@ -6,14 +6,12 @@ using Core.Utilities.Results.Concrate;
 using DataAccess.Abstract;
 using Entities.Concrate;
 using Entities.DTOs;
-using FluentValidation.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Business.Concrate
 {
-    [Validator(typeof(UserValidator))]
     public class UserManager : IUserService
     {
         IUserDal _userDal;

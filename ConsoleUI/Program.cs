@@ -1,6 +1,5 @@
 ﻿using Business.Abstract;
 using Business.Concrate;
-using Business.DependencyResolvers.Ninject;
 using Business.HandleException;
 using DataAccess.Concrate;
 using DataAccess.Concrate.EntityFramework;
@@ -24,9 +23,9 @@ namespace ConsoleUI
             //User user1 = new User { Email = "enes1@enes2.com", FirstName = "enes2", LastName = "abc1", NickName = "enes2abc1", Password = "abc1" };
             Rental rental = new Rental { CarID = 11, CustomerID = 1, RentDate = DateTime.Now.Date, ReturnDate = null, IsEnabled = false };
             ////Dependency injection // Ioc Container=>Ninject
-            _carService = InstanceFactory.GetInstance<ICarService>(new BusinessModule());
-            _userService = InstanceFactory.GetInstance<IUserService>(new BusinessModule());
-            _rentalService = InstanceFactory.GetInstance<IRentalService>(new BusinessModule());
+            //_carService = InstanceFactory.GetInstance<ICarService>(new BusinessModule());
+            //_userService = InstanceFactory.GetInstance<IUserService>(new BusinessModule());
+            //_rentalService = InstanceFactory.GetInstance<IRentalService>(new BusinessModule());
             //CarAdded(car1, _carService);
             //_userService.Add(user1);
             //_rentalService.Add(rental);

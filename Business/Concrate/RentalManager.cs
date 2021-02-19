@@ -2,19 +2,18 @@
 using Business.Attributes;
 using Business.Constant;
 using Business.ValidationRules;
+using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrate;
 using DataAccess.Abstract;
 using DataAccess.Concrate.EntityFramework;
 using Entities.Concrate;
-using FluentValidation.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Business.Concrate
 {
-    //[Validator(typeof(RentalValidator))]
     public class RentalManager : IRentalService
     {
         IRentalDal _rentalDal;
@@ -23,30 +22,16 @@ namespace Business.Concrate
         {
             _rentalDal = rentalDal;
         }
+        [ValidationAspect(typeof(RentalValidator))]
         public IResult Add(Rental rental)
         {
-            #region ValidationToolToIResult
-            //var verification = ValidationTool.ValidaterVoid(new RentalValidator(rental), rental, Messages.RentalAdd);
-            //if (verification.Success == true)
-            //{
-            //    _rentalDal.Add(rental);
-            //}
-            //_rentalDal.Add(new Rental
-            //{
-            //    CarID = rental.CarID,
-            //    CustomerID = rental.CustomerID,
-            //    RentDate = DateTime.Now.Date,
-            //    ReturnDate = null
-            //});
-            //return verification;
-            #endregion
 
-            var result = _rentalDal.Get(k => k.CarID == rental.CarID && k.ReturnDate == null);
+            var result = _rentalDal.Get(k => k.CarID == rental.CarID && (k.ReturnDate == null || k.RentDate < DateTime.Now));
             if (result != null)
             {
                 return new ErrorResult(Messages.RentalAddInvalid);
             }
-            _rentalDal.Add(result);
+            _rentalDal.Add(rental);
             return new SuccessResult(Messages.RentalAdd);
         }
 

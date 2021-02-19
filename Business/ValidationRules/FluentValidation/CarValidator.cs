@@ -10,6 +10,8 @@ namespace Business.ValidationRules
     {
         public CarValidator()
         {
+            RuleFor(p => p.BrandID).NotEmpty();
+            RuleFor(p => p.ColorID).NotEmpty();
             RuleFor(t => t.DailyPrice).GreaterThan(0).WithMessage("0'dan büyük olmalı=> DailPrice");
             RuleFor(t => t.Description).Must(DescriptionLengthWithTwo).WithMessage("Açıklama 2 karakterden büyük olmalıdır.=>Description");
             RuleFor(t => t.Description).Must(DescriptionWithA).WithMessage("Açıklama A karakterden başlamalıdır.=>Description");

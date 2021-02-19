@@ -9,18 +9,18 @@ using System.Text;
 
 namespace Business.DependencyResolvers.Ninject
 {
-    public class BusinessModule : NinjectModule
-    {
-        public override void Load()
-        {
-            Bind<ICarService>().To<CarManager>();
-            Bind<ICarDal>().To<EfCarDal>();
+    //public class BusinessModule : NinjectModule
+    //{
+    //    public override void Load()
+    //    {
+    //        Bind<ICarService>().To<CarManager>();
+    //        Bind<ICarDal>().To<EfCarDal>();
 
-            Bind<IRentalService>().To<RentalManager>();
-            Bind<IRentalDal>().To<EfRentalDal>();
+    //        Bind<IRentalService>().To<RentalManager>();
+    //        Bind<IRentalDal>().To<EfRentalDal>();
 
-            Bind<IUserService>().To<UserManager>();
-            Bind<IUserDal>().To<EfUserDal>();
-        }
-    }
+    //        Bind<IUserService>().To<UserManager>();
+    //        Bind<IUserDal>().To<EfUserDal>();
+    //    }
+    //}
 }

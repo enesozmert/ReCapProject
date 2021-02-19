@@ -7,14 +7,12 @@ using DataAccess.Abstract;
 using Entities.Concrate;
 using Entities.DTOs;
 using FluentValidation;
-using FluentValidation.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Business.Concrate
 {
-    [Validator(typeof(CarManager))]
     public class CarManager : ICarService
     {
         private delegate void DelegateValidator();
@@ -26,13 +24,6 @@ namespace Business.Concrate
 
         public IResult Add(Car car)
         {
-            //CarValidator validationRules = new CarValidator();
-            //var result = validationRules.Validate(car);
-            //if (result.Errors.Count > 0)
-            //{
-            //    throw new ValidationException(result.Errors);
-            //}
-            
             _carDal.Add(car);
             return new SuccessResult(Messages.CarAdded);
         }
