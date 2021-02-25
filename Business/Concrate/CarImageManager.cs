@@ -120,11 +120,11 @@ namespace Business.Concrate
         }
         private IResult CheckIfCarImageOfImageUpload(CarImage carImage)
         {
-            if (string.IsNullOrEmpty(_carImagePathNoName + carImage.ImagePath))
+            if (!string.IsNullOrEmpty(carImage.ImagePath))
             {
-                if (Directory.Exists(_carImagePathNoName + carImage.ImagePath))
+                if (Directory.Exists(carImage.ImagePath))
                 {
-                    Directory.Delete(_carImagePathNoName + carImage.ImagePath);
+                    Directory.Delete(carImage.ImagePath);
                     BusinessRules.Run(CheckIfCarImageOfImageNew(carImage));
                     return new SuccessResult();
                 }
@@ -133,11 +133,11 @@ namespace Business.Concrate
         }
         private IResult CheckIfCarImageOfImageDelete(CarImage carImage)
         {
-            if (string.IsNullOrEmpty(_carImagePathNoName + carImage.ImagePath))
+            if (!string.IsNullOrEmpty(carImage.ImagePath))
             {
-                if (Directory.Exists(_carImagePathNoName + carImage.ImagePath))
+                if (Directory.Exists(carImage.ImagePath))
                 {
-                    Directory.Delete(_carImagePathNoName + carImage.ImagePath);
+                    Directory.Delete(carImage.ImagePath);
                     return new SuccessResult();
                 }
             }
@@ -148,7 +148,7 @@ namespace Business.Concrate
             var result = _carImageDal.GetAll(p => p.ImagePath == null);
             foreach (var res in result)
             {
-                if (string.IsNullOrEmpty(res.ImagePath))
+                if (!string.IsNullOrEmpty(res.ImagePath))
                 {
                     res.ImagePath = _carImagePathNoName + _carImageNameDefault;
                     return new SuccessResult();
@@ -159,7 +159,7 @@ namespace Business.Concrate
         private IResult GetCheckIfCarImageOfImageNull()
         {
             var result = _carImageDal.Get(p => p.ImagePath == null);
-            if (string.IsNullOrEmpty(result.ImagePath))
+            if (!string.IsNullOrEmpty(result.ImagePath))
             {
                 result.ImagePath = _carImagePathNoName + _carImageNameDefault;
                 return new SuccessResult();
