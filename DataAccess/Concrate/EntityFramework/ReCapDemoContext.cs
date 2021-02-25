@@ -18,6 +18,7 @@ namespace DataAccess.Concrate.EntityFramework
         public DbSet<User> Users { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Rental> Rentals { get; set; }
+        public DbSet<CarImage> CarImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -45,6 +46,11 @@ namespace DataAccess.Concrate.EntityFramework
         .Entity<Brand>()
         .HasOne(e => e.CarProp)
         .WithOne(e => e.BrandProp)
+        .OnDelete(DeleteBehavior.ClientCascade);
+            modelBuilder
+        .Entity<CarImage>()
+        .HasOne(e => e.CarProp)
+        .WithOne(e => e.CarImageProp)
         .OnDelete(DeleteBehavior.ClientCascade);
         }
     }

@@ -22,10 +22,9 @@ namespace Business.Concrate
         {
             _rentalDal = rentalDal;
         }
-        [ValidationAspect(typeof(RentalValidator))]
+
         public IResult Add(Rental rental)
         {
-
             var result = _rentalDal.Get(k => k.CarID == rental.CarID && (k.ReturnDate == null || k.RentDate < DateTime.Now));
             if (result != null)
             {
@@ -35,6 +34,7 @@ namespace Business.Concrate
             return new SuccessResult(Messages.RentalAdd);
         }
 
+        [ValidationAspect(typeof(RentalValidator))]
         public IResult Delete(Rental rental)
         {
             _rentalDal.Delete(rental);

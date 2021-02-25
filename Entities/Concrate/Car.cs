@@ -18,5 +18,6 @@ namespace Entities.Concrate
         public Brand BrandProp { get; set; }
         public Color ColorProp { get; set; }
         public Rental RentalProp { get; set; }
+        public CarImage CarImageProp { get; set; }
     }
 }

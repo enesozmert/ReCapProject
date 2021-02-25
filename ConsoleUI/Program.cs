@@ -18,10 +18,11 @@ namespace ConsoleUI
 
             string iDate = "2022-02-02";
             DateTime oDate = DateTime.Parse(iDate);
+            var carImagePathNoName = AppDomain.CurrentDomain.BaseDirectory;
             //Car car1 = new Car() { BrandID = 3, ColorID = 2, DailyPrice = 2, Description = "arenault", ModelYear = 2002 };
             //Car car2 = new Car() { BrandID = 1, ColorID =2 , DailyPrice = 111, Description = "yenieklendi", ModelYear = 1992 };
             //User user1 = new User { Email = "enes1@enes2.com", FirstName = "enes2", LastName = "abc1", NickName = "enes2abc1", Password = "abc1" };
-            Rental rental = new Rental { CarID = 11, CustomerID = 1, RentDate = DateTime.Now.Date, ReturnDate = null, IsEnabled = false };
+            //Rental rental = new Rental { CarID = 11, CustomerID = 1, RentDate = DateTime.Now.Date, ReturnDate = null, IsEnabled = false };
             ////Dependency injection // Ioc Container=>Ninject
             //_carService = InstanceFactory.GetInstance<ICarService>(new BusinessModule());
             //_userService = InstanceFactory.GetInstance<IUserService>(new BusinessModule());
@@ -29,12 +30,12 @@ namespace ConsoleUI
             //CarAdded(car1, _carService);
             //_userService.Add(user1);
             //_rentalService.Add(rental);
-            var result = _rentalService.Add(rental);
-            if (result.Success)
-            {
-                HandleException.Error(() => { _rentalService.Add(rental); });
-            }
-            Console.WriteLine(result.Message);
+            //var result = _rentalService.Add(rental);
+            //if (result.Success)
+            //{
+            //    HandleException.Error(() => { _rentalService.Add(rental); });
+            //}
+            //Console.WriteLine(result.Message);
             //HandleException.Error(() => { Console.WriteLine(result.Message); });
             //IsForRent();
             //Console.WriteLine(_rentalService.IsForRent(2017).Message);

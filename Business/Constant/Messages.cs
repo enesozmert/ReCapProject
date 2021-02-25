@@ -37,14 +37,23 @@ namespace Business.Constant
         public static string IsForRentInvalid = "Rental is it for rent invalied//araba teslim edilmedi";
         #endregion
         #region BrandReg
-        public static string BrandAdded="Brand added";
-        public static string BrandDeleted="Brand deleted";
-        public static string BrandUpdated="Brand updated";
+        public static string BrandAdded = "Brand added";
+        public static string BrandDeleted = "Brand deleted";
+        public static string BrandUpdated = "Brand updated";
         #endregion
         #region ColorReg
         public static string ColorAdded = "Color added";
         public static string ColorDeleted = "Color deleted";
         public static string ColorUpdated = "Color updated";
+        #endregion
+        #region CarImage
+        public static string CarImageAdded = "CarImage added";
+        public static string CarImageDeleted = "CarImage deleted";
+        public static string CarImageUpdated = "CarImage updated";
+        public static string CarImageLimitExceded = "5 ten fazla araba resminiz olamaz";
+        public static string CarImageDateExceded = "Zamanlar eşleşmiyor.";
+        public static string CarImagesDeleteExceded="Resminiz silinmedi";
+        public static string CarImagesUpdateExceded="Resminiz güncellenemedi";
         #endregion
     }
 }

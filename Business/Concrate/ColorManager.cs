@@ -31,7 +31,7 @@ namespace Business.Concrate
             _colorDal.Delete(color);
             return new SuccessResult(Messages.ColorDeleted);
         }
-
+        [ValidationAspect(typeof(ColorValidator))]
         public IDataResult<List<Color>> GetAll()
         {
             return new SuccessDataResult<List<Color>>(_colorDal.GetAll());
