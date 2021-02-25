@@ -13,4 +13,6 @@ kodlama.io ödevi :  Memeory List için Katmanlı Mimari Özeti
 12.02.2021 core katmanına result yapısı eklendi ve araba'nın telim edilip edilmediği ve kiralanma olayları eklendi 
 Result yapısı FluentValidation tool hataları ile birleştirildi.
 
+26.02.2021 arabalar icin resim sitemi kuruldu iş kodları yazıldı istenilen özellikler yazıldı.
+
 
