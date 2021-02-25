@@ -103,28 +103,34 @@ namespace Business.Concrate
             {
                 return new ErrorResult();
             }
-            string carImagePathAndName = _carImagePathNoName + Guid.NewGuid().ToString() + fileExtension;
             string carImageName = Guid.NewGuid().ToString() + fileExtension;
+            string carImagePathAndName = _carImagePathNoName + carImageName;
             StreamWriter streamWriter = new StreamWriter(carImagePathAndName);
-            if (string.IsNullOrEmpty(carImage.ImagePath) == false)
+            if (File.Exists(carImage.ImagePath))
             {
-                using (FileStream source = File.Open(carImage.ImagePath, FileMode.Open))
+                if (string.IsNullOrEmpty(carImage.ImagePath) == false)
                 {
-                    source.CopyTo(streamWriter.BaseStream);
+                    using (FileStream source = File.Open(carImage.ImagePath, FileMode.Open))
+                    {
+                        source.CopyTo(streamWriter.BaseStream);
+                        carImage.ImagePath = carImageName;
+                    }
+                    return new SuccessResult();
                 }
-                carImage.ImagePath = carImageName;
-                return new SuccessResult();
             }
+            else { return new ErrorResult(); }
             carImage.ImagePath = null;
             return new SuccessResult();
         }
         private IResult CheckIfCarImageOfImageUpload(CarImage carImage)
         {
-            if (!string.IsNullOrEmpty(carImage.ImagePath))
+            var imagePath = _carImageDal.Get(p => p.CarID == carImage.CarID).ImagePath;
+            string path = _carImagePathNoName + imagePath;
+            if (!string.IsNullOrEmpty(imagePath))
             {
-                if (File.Exists(_carImagePathNoName + carImage.ImagePath) == true)
+                if (File.Exists(path) == true)
                 {
-                    File.Delete(_carImagePathNoName + carImage.ImagePath);
+                    File.Delete(path);
                     BusinessRules.Run(CheckIfCarImageOfImageNew(carImage));
                     return new SuccessResult();
                 }
@@ -133,8 +139,9 @@ namespace Business.Concrate
         }
         private IResult CheckIfCarImageOfImageDelete(CarImage carImage)
         {
-            string path = _carImagePathNoName + carImage.ImagePath;
-            if (string.IsNullOrEmpty(carImage.ImagePath) == false)
+            var imagePath = _carImageDal.Get(p => p.CarID == carImage.CarID).ImagePath;
+            string path = _carImagePathNoName + imagePath;
+            if (string.IsNullOrEmpty(imagePath) == false)
             {
                 if (File.Exists(path) == true)
                 {
