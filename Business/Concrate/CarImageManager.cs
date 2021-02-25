@@ -103,23 +103,6 @@ namespace Business.Concrate
             {
                 return new ErrorResult();
             }
-            string carImageName = Guid.NewGuid().ToString() + fileExtension;
-            string carImagePathAndName = _carImagePathNoName + carImageName;
-            StreamWriter streamWriter = new StreamWriter(carImagePathAndName);
-            if (File.Exists(carImage.ImagePath))
-            {
-                if (string.IsNullOrEmpty(carImage.ImagePath) == false)
-                {
-                    using (FileStream source = File.Open(carImage.ImagePath, FileMode.Open))
-                    {
-                        source.CopyTo(streamWriter.BaseStream);
-                        carImage.ImagePath = carImageName;
-                    }
-                    return new SuccessResult();
-                }
-            }
-            else { return new ErrorResult(); }
-            carImage.ImagePath = null;
             return new SuccessResult();
         }
         private IResult CheckIfCarImageOfImageUpload(CarImage carImage)
