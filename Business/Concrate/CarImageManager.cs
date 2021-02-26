@@ -16,8 +16,6 @@ namespace Business.Concrate
     public class CarImageManager : ICarImageService
     {
         ICarImageDal _carImageDal;
-        private string _carImagePathNoName = StorageFilePath.GetPathCarImages();
-        private string _carImageNameDefault = "RentACarImageDefault.jpg";
         public CarImageManager(ICarImageDal carImageDal)
         {
             _carImageDal = carImageDal;
@@ -27,7 +25,7 @@ namespace Business.Concrate
         {
             carImage.Date = DateTime.Now;
             //carImage.ImagePath = CheckIfCarImageOfImage(carImage.ImagePath);
-            var result = BusinessRules.Run(CheckIfCarImageLimitExceded(carImage.CarID), CheckIfCarImageOfImageNew(carImage));
+            var result = BusinessRules.Run(CheckIfCarImageLimitExceded(carImage.CarID), CheckIfCarImageOfImageExtension(carImage));
             if (result != null)
             {
                 return result;
@@ -38,7 +36,7 @@ namespace Business.Concrate
 
         public IResult Delete(CarImage carImage)
         {
-            var result = BusinessRules.Run(CheckIfCarImageOfImageDelete(carImage));
+            var result = BusinessRules.Run(CheckIfCarImageOfImageDelete(carImage), CheckIfCarImageOfImageExtension(carImage));
             if (result != null)
             {
                 return result;
@@ -59,11 +57,6 @@ namespace Business.Concrate
 
         public IDataResult<CarImage> GetById(int CarID)
         {
-            var result = BusinessRules.Run(GetCheckIfCarImageOfImageNull());
-            if (result != null)
-            {
-                return (IDataResult<CarImage>)result;
-            }
             return new SuccessDataResult<CarImage>(_carImageDal.Get(p => p.CarID == CarID));
         }
 
@@ -78,11 +71,21 @@ namespace Business.Concrate
             return new SuccessResult(Messages.CarImageUpdated);
 
         }
+        public IDataResult<List<CarImage>> GetAllByCarId(int carId)
+        {
+            var getAllbyCarIdResult = _carImageDal.GetAll(p => p.CarID == carId);
+            if (getAllbyCarIdResult.Count == 0)
+            {
+                return new SuccessDataResult<List<CarImage>>(new List<CarImage> { new CarImage { ImagePath = FilePath._carImageNameDefault } });
+            }
+
+            return new SuccessDataResult<List<CarImage>>(getAllbyCarIdResult);
+        }
         #region BusinessMethod
         private IResult CheckIfCarImageLimitExceded(int carID)
         {
             var result = _carImageDal.GetAll(p => p.CarID == carID);
-            if (result.Count > 6)
+            if (result.Count > 4)
             {
                 return new ErrorResult(Messages.CarImageLimitExceded);
             }
@@ -96,25 +99,28 @@ namespace Business.Concrate
             }
             return new SuccessResult();
         }
-        private IResult CheckIfCarImageOfImageNew(CarImage carImage)
+        private IResult CheckIfCarImageOfImageExtension(CarImage carImage)
         {
-            string fileExtension = carImage.ImagePath.Substring(carImage.ImagePath.IndexOf("."), carImage.ImagePath.Length - carImage.ImagePath.IndexOf("."));
-            if (!(fileExtension == ".jpg" || fileExtension == ".png" || fileExtension == ".png"))
+            if (carImage.ImagePath != null)
             {
-                return new ErrorResult();
+                string fileExtension = carImage.ImagePath.Substring(carImage.ImagePath.IndexOf("."), carImage.ImagePath.Length - carImage.ImagePath.IndexOf("."));
+                if (!(fileExtension == ".jpg" || fileExtension == ".png" || fileExtension == ".png"))
+                {
+                    return new ErrorResult();
+                }
             }
             return new SuccessResult();
         }
         private IResult CheckIfCarImageOfImageUpload(CarImage carImage)
         {
             var imagePath = _carImageDal.Get(p => p.CarID == carImage.CarID).ImagePath;
-            string path = _carImagePathNoName + imagePath;
+            string path = FilePath._carImagePathNoName + imagePath;
             if (!string.IsNullOrEmpty(imagePath))
             {
                 if (File.Exists(path) == true)
                 {
                     File.Delete(path);
-                    BusinessRules.Run(CheckIfCarImageOfImageNew(carImage));
+                    BusinessRules.Run(CheckIfCarImageOfImageExtension(carImage));
                     return new SuccessResult();
                 }
             }
@@ -123,7 +129,7 @@ namespace Business.Concrate
         private IResult CheckIfCarImageOfImageDelete(CarImage carImage)
         {
             var imagePath = _carImageDal.Get(p => p.CarID == carImage.CarID).ImagePath;
-            string path = _carImagePathNoName + imagePath;
+            string path = FilePath._carImagePathNoName + imagePath;
             if (string.IsNullOrEmpty(imagePath) == false)
             {
                 if (File.Exists(path) == true)
@@ -134,26 +140,25 @@ namespace Business.Concrate
             }
             return new ErrorResult(Messages.CarImagesDeleteExceded);
         }
-        private IResult GetAllCheckIfCarImageOfImageNull()
+        private IResult CheckIfCarImageOfImageSave(CarImage carImage)
         {
-            var result = _carImageDal.GetAll(p => p.ImagePath == null);
-            foreach (var res in result)
+            string fileExtension = carImage.ImagePath.Substring(carImage.ImagePath.IndexOf("."), carImage.ImagePath.Length - carImage.ImagePath.IndexOf("."));
+            string carImageName = Guid.NewGuid().ToString() + fileExtension;
+            string carImagePathAndName = FilePath._carImagePathNoName + carImageName;
+            StreamWriter streamWriter = new StreamWriter(carImagePathAndName);
+            if (System.IO.File.Exists(carImage.ImagePath))
             {
-                if (string.IsNullOrEmpty(res.ImagePath) == false)
+                if (string.IsNullOrEmpty(carImage.ImagePath) == false)
                 {
-                    res.ImagePath = _carImagePathNoName + _carImageNameDefault;
-                    return new SuccessResult();
+                    using (FileStream source = System.IO.File.Open(carImage.ImagePath, FileMode.Open))
+                    {
+                        source.CopyTo(streamWriter.BaseStream);
+                        source.Flush();
+                        source.Dispose();
+                        carImage.ImagePath = carImageName;
+                        return new SuccessResult();
+                    }
                 }
-            }
-            return new ErrorResult();
-        }
-        private IResult GetCheckIfCarImageOfImageNull()
-        {
-            var result = _carImageDal.Get(p => p.ImagePath == null);
-            if (!string.IsNullOrEmpty(result.ImagePath))
-            {
-                result.ImagePath = _carImagePathNoName + _carImageNameDefault;
-                return new SuccessResult();
             }
             return new ErrorResult();
         }

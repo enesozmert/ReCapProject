@@ -39,9 +39,10 @@ namespace WebAPI.Controllers
                         using (FileStream source = System.IO.File.Open(carImage.ImagePath, FileMode.Open))
                         {
                             source.CopyTo(streamWriter.BaseStream);
+                            source.Flush();
+                            source.Dispose();
                             carImage.ImagePath = carImageName;
                         }
-
                     }
                 }
             }
