@@ -1,9 +1,9 @@
 ﻿using Business.Abstract;
-using Business.Concrate;
+using Business.Concrete;
 using Business.Constant;
 using Core.Utilities.Results.Concrate;
 using DataAccess.Abstract;
-using Entities.Concrate;
+using Entities.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Reflection;

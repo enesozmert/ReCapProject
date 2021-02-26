@@ -1,9 +1,9 @@
 ﻿using Business.Abstract;
-using Business.Concrate;
+using Business.Concrete;
 using Business.HandleException;
 using DataAccess.Concrate;
 using DataAccess.Concrate.EntityFramework;
-using Entities.Concrate;
+using Entities.Concrete;
 using System;
 
 namespace ConsoleUI

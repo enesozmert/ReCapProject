@@ -1,5 +1,5 @@
 ﻿using Business.Abstract;
-using Business.Concrate;
+using Business.Concrete;
 using DataAccess.Abstract;
 using DataAccess.Concrate.EntityFramework;
 using Ninject.Modules;
