@@ -9,6 +9,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Drawing;
+using Microsoft.AspNetCore.Hosting;
+using Core.Utilities.Results.Abstract;
+using System.Threading;
+using Core.Utilities.File;
 
 namespace WebAPI.Controllers
 {
@@ -17,18 +22,20 @@ namespace WebAPI.Controllers
     public class CarImagesController : ControllerBase
     {
         ICarImageService _carImageService;
+        private readonly IWebHostEnvironment _env;
         private string _carImagePathNoName = StorageFilePath.GetPathCarImages();
-        public CarImagesController(ICarImageService carImageService)
+        public CarImagesController(ICarImageService carImageService, IWebHostEnvironment env)
         {
             _carImageService = carImageService;
+            _env = env;
         }
 
         [HttpPost("add")]
         public IActionResult Add(CarImage carImage)
         {
-            ImageSave(carImage);
-            if (CheckIfImageFile(carImage.ImagePath))
+            if (FileUtilities.CheckIfImageFile(carImage.ImagePath))
             {
+                carImage.ImagePath = FileUtilities.ImageSave(carImage.ImagePath, _carImagePathNoName, FileUtilities.NameGuid());
                 var result = _carImageService.Add(carImage);
                 if (result.Success == true)
                 {
@@ -45,14 +52,13 @@ namespace WebAPI.Controllers
                 });
             }
         }
-        [HttpPost("addbatch")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        public IActionResult AddBatch(IFormFile[] imageFile, CarImage carImage)
+        #region FormFile
+        [HttpPost("addformfile")]
+        public IActionResult AddBatch(IFormFile imageFile, CarImage carImage)
         {
-            ImageBatchSave(imageFile, carImage);
-            if (imageFile.Any(p => CheckIfImageFile(p.FileName) == CheckIfImageFile(p.FileName)))
+            if (FileUtilities.CheckIfImageFile(imageFile))
             {
+                carImage.ImagePath = ImageFromFileSave(imageFile, _carImagePathNoName, FileUtilities.NameGuid());
                 var result = _carImageService.Add(carImage);
                 if (result.Success == true)
                 {
@@ -69,6 +75,33 @@ namespace WebAPI.Controllers
                 });
             }
         }
+        [HttpPost("addfromfilebatch")]
+        public IActionResult AddFormFileBatch(List<IFormFile> imageFiles, CarImage carImage)
+        {
+            if (FileUtilities.CheckIfImageFile(imageFiles))
+            {
+                IResult result = null;
+                foreach (var item in ImageFromFileBatchSave(imageFiles, _carImagePathNoName, FileUtilities.NameGuid()))
+                {
+                    carImage.ImagePath = item;
+                    result = _carImageService.Add(carImage);
+                }
+                if (result.Success == true)
+                {
+                    return Ok(result);
+                }
+                return BadRequest(result);
+            }
+            else
+            {
+                return BadRequest(new
+                {
+                    Message = "Geçerli bir resim yükleyiniz.",
+                    carImage
+                });
+            }
+        }
+        #endregion
         [HttpPost("update")]
         public IActionResult Update(CarImage carImage)
         {
@@ -113,61 +146,42 @@ namespace WebAPI.Controllers
             }
             return BadRequest(result);
         }
+        [HttpGet("view")]
+        //[Route("api/Temp/{dataImagePath}")]
+        public IActionResult View(int id)
+        {
+            var result = _carImageService.GetById(id);
+            string dataImagePath = result.Data.ImagePath;
+            string fileExtension = dataImagePath.Substring(dataImagePath.IndexOf("."), dataImagePath.Length - dataImagePath.IndexOf("."));
+            if (result.Success == true)
+            {
+                if (System.IO.File.Exists(_env.WebRootPath + "/Temp/" + dataImagePath) == false)
+                {
+                    FileUtilities.ImageSave(_carImagePathNoName + result.Data.ImagePath, _env.WebRootPath + "/Temp/");
+                }
+                FileStream stream = System.IO.File.Open(_carImagePathNoName + dataImagePath, FileMode.Open);
+                return File(stream, @"image/" + fileExtension.Replace(".", ""));
+            }
+
+            return BadRequest(result);
+        }
         #region Methods
-        private void ImageSave(CarImage carImage)
+
+        private string ImageFromFileSave(IFormFile formFile, string newPath, string name = null)
         {
-            string fileExtension = carImage.ImagePath.Substring(carImage.ImagePath.IndexOf("."), carImage.ImagePath.Length - carImage.ImagePath.IndexOf("."));
-            string carImageName = Guid.NewGuid().ToString() + fileExtension;
-            string carImagePathAndName = _carImagePathNoName + carImageName;
-            StreamWriter streamWriter = new StreamWriter(carImagePathAndName);
-            if (System.IO.File.Exists(carImage.ImagePath))
+            return FileUtilities.ImageSave(formFile.Name, newPath, name);
+        }
+        private List<string> ImageFromFileBatchSave(List<IFormFile> formFiles, string newPath, string name = null)
+        {
+            List<string> list = new List<string>();
+            foreach (var formFile in formFiles)
             {
-                if (string.IsNullOrEmpty(carImage.ImagePath) == false)
-                {
-                    using (FileStream source = System.IO.File.Open(carImage.ImagePath, FileMode.Open))
-                    {
-                        source.CopyTo(streamWriter.BaseStream);
-                        source.Flush();
-                        source.Dispose();
-                        carImage.ImagePath = carImageName;
-                    }
-                }
+                var result = FileUtilities.ImageSave(formFile.FileName, newPath, name);
+                list.Add(result);
             }
+            return list;
         }
-        private async void ImageBatchSave(IFormFile[] formFiles, CarImage carImage)
-        {
-            string[] savedImageUrls = new string[formFiles.Length];
-            for (int i = 0; i < formFiles.Length; i++)
-            {
-                string fileExtension = Path.GetExtension(formFiles[i].FileName);
-                string carImageName = Guid.NewGuid().ToString() + fileExtension;
-                string carImagePathAndName = _carImagePathNoName + carImageName;
-                StreamWriter streamWriter = new StreamWriter(carImagePathAndName);
-                if (System.IO.File.Exists(savedImageUrls[i]))
-                {
-                    if (string.IsNullOrEmpty(savedImageUrls[i]) == false)
-                    {
-                        using (FileStream source = System.IO.File.Open(savedImageUrls[i], FileMode.Open))
-                        {
-                            await formFiles[i].CopyToAsync(streamWriter.BaseStream);
-                            source.Flush();
-                            source.Dispose();
-                            carImage.ImagePath = carImageName;
-                        }
-                    }
-                }
-            }
 
-        }
-        private bool CheckIfImageFile(string imagePath)
-        {
-            var extension = imagePath.Substring(imagePath.IndexOf("."), imagePath.Length - imagePath.IndexOf("."));
-
-            bool result = (extension == ".jpg" || extension == ".jpeg" || extension == ".png");
-            if (!result) return false;
-
-            return true;
-        }
         #endregion
 
 

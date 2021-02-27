@@ -47,17 +47,13 @@ namespace Business.Concrete
 
         public IDataResult<List<CarImage>> GetAll()
         {
-            //var result = BusinessRules.Run(GetAllCheckIfCarImageOfImageNull());
-            //if (result != null)
-            //{
-            //    return (IDataResult<List<CarImage>>)result;
-            //}
+
             return new SuccessDataResult<List<CarImage>>(_carImageDal.GetAll());
         }
 
-        public IDataResult<CarImage> GetById(int CarID)
+        public IDataResult<CarImage> GetById(int ID)
         {
-            return new SuccessDataResult<CarImage>(_carImageDal.Get(p => p.CarID == CarID));
+            return new SuccessDataResult<CarImage>(_carImageDal.Get(p => p.ID == ID));
         }
 
         public IResult Update(CarImage carImage)
