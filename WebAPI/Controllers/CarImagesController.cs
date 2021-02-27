@@ -54,11 +54,11 @@ namespace WebAPI.Controllers
         }
         #region FormFile
         [HttpPost("addformfile")]
-        public IActionResult AddBatch(IFormFile imageFile, CarImage carImage)
+        public IActionResult AddBatch([FromForm] CarImage carImage)
         {
-            if (FileUtilities.CheckIfImageFile(imageFile))
+            if (FileUtilities.CheckIfImageFile(carImage.ImageFile))
             {
-                carImage.ImagePath = ImageFromFileSave(imageFile, _carImagePathNoName, FileUtilities.NameGuid());
+                carImage.ImagePath = ImageFromFileSave(carImage.ImageFile, _carImagePathNoName, FileUtilities.NameGuid());
                 var result = _carImageService.Add(carImage);
                 if (result.Success == true)
                 {
@@ -76,12 +76,12 @@ namespace WebAPI.Controllers
             }
         }
         [HttpPost("addfromfilebatch")]
-        public IActionResult AddFormFileBatch(List<IFormFile> imageFiles, CarImage carImage)
+        public IActionResult AddFormFileBatch([FromForm] CarImage carImage)
         {
-            if (FileUtilities.CheckIfImageFile(imageFiles))
+            if (FileUtilities.CheckIfImageFile(carImage.ImageFiles))
             {
                 IResult result = null;
-                foreach (var item in ImageFromFileBatchSave(imageFiles, _carImagePathNoName, FileUtilities.NameGuid()))
+                foreach (var item in ImageFromFileBatchSave(carImage.ImageFiles, _carImagePathNoName, FileUtilities.NameGuid()))
                 {
                     carImage.ImagePath = item;
                     result = _carImageService.Add(carImage);

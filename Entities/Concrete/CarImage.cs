@@ -1,6 +1,8 @@
 ﻿using Core.Entity;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Entities.Concrete
@@ -12,5 +14,10 @@ namespace Entities.Concrete
         public string ImagePath { get; set; }
         public DateTime? Date { get; set; }
         public Car CarProp { get; set; }
+
+        [NotMapped]
+        public IFormFile ImageFile { get; set; }
+        [NotMapped]
+        public List<IFormFile> ImageFiles { get; set; }
     }
 }
