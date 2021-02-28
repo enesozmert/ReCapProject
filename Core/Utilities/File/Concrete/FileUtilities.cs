@@ -6,15 +6,11 @@ using System.Text;
 
 namespace Core.Utilities.File
 {
-    public class FileUtilities : IFileUtilities
+    public partial class FileUtilities : IFileUtilities
     {
         public static string FileExtension(string path)
         {
-            string fileExtension = null;
-            if (path.IndexOf(@"/") > -1 || path.IndexOf(@"\") > -1)
-            {
-                fileExtension = path.Substring(path.IndexOf("."), path.Length - path.IndexOf("."));
-            }
+            string fileExtension = path.Substring(path.IndexOf("."), path.Length - path.IndexOf("."));
             return fileExtension;
         }
         public static string GetFileName(string path)
@@ -28,28 +24,6 @@ namespace Core.Utilities.File
                 return path.Substring(path.LastIndexOf(@"\"), path.Length - path.LastIndexOf(@"\"));
             }
             return null;
-        }
-        public static string ImageSave(string oldPath, string newPath, string name = null)
-        {
-            if (name == null)
-            {
-                name = GetFileName(oldPath);
-            }
-            string carImagePathAndName = newPath + name + FileExtension(oldPath);
-            StreamWriter streamWriter = new StreamWriter(carImagePathAndName);
-            if (System.IO.File.Exists(oldPath))
-            {
-                if (string.IsNullOrEmpty(oldPath) == false)
-                {
-                    using (FileStream source = System.IO.File.Open(oldPath, FileMode.Open))
-                    {
-                        source.CopyToAsync(streamWriter.BaseStream);
-                        source.Flush();
-                        source.Dispose();
-                    }
-                }
-            }
-            return name + FileExtension(oldPath);
         }
         public static bool CheckIfImageFile(string imagePath)
         {
@@ -86,6 +60,31 @@ namespace Core.Utilities.File
         public static string NameGuid()
         {
             return Guid.NewGuid().ToString();
+        }
+
+        public static string ImageSave(string oldPath, string newPath, string name = null, IFormFile formFile = null)
+        {
+            if (name == null)
+            {
+                name = GetFileName(oldPath);
+            }
+
+            string carImagePathAndName = newPath + name + FileExtension(oldPath);
+            StreamWriter streamWriter = new StreamWriter(carImagePathAndName);
+            if (string.IsNullOrEmpty(oldPath) == false)
+            {
+                using (FileStream source = System.IO.File.Open(oldPath, FileMode.Open))
+                {
+                    if (formFile != null)
+                    {
+                        formFile.CopyToAsync(streamWriter.BaseStream);
+                    }
+                    source.CopyToAsync(streamWriter.BaseStream);
+                    source.Flush();
+                    source.Dispose();
+                }
+            }
+            return name + FileExtension(oldPath);
         }
     }
 }

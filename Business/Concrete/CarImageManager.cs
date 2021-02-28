@@ -1,6 +1,8 @@
 ﻿using Business.Abstract;
 using Business.Constant;
 using Core.Utilities.Business;
+using Core.Utilities.File;
+using Core.Utilities.File.Concrete;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrate;
 using DataAccess.Abstract;
@@ -9,13 +11,17 @@ using Storage;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
+using static Core.Utilities.File.FileUtilities;
 
 namespace Business.Concrete
 {
     public class CarImageManager : ICarImageService
     {
         ICarImageDal _carImageDal;
+        ImageSaveBase _imageSaveBase;
+
         public CarImageManager(ICarImageDal carImageDal)
         {
             _carImageDal = carImageDal;
@@ -24,19 +30,55 @@ namespace Business.Concrete
         public IResult Add(CarImage carImage)
         {
             carImage.Date = DateTime.Now;
-            //carImage.ImagePath = CheckIfCarImageOfImage(carImage.ImagePath);
-            var result = BusinessRules.Run(CheckIfCarImageLimitExceded(carImage.CarID), CheckIfCarImageOfImageExtension(carImage));
-            if (result != null)
+            foreach (var item in _imageSaveBase.Save(new FormFileProp { Name = FileUtilities.NameGuid(), NewPath = StorageFilePath.GetPathCarImages(), OldPath = carImage.ImagePath }))
             {
-                return result;
+                carImage.ImagePath = item;
+                _carImageDal.Add(carImage);
+                //carImage.ImagePath = CheckIfCarImageOfImage(carImage.ImagePath);
+                var result = BusinessRules.Run(CheckIfCarImageLimitExceded(carImage.CarID), CheckIfCarImageOfImageExtension(item));
+                if (result != null)
+                {
+                    return result;
+                }
+
             }
-            _carImageDal.Add(carImage);
+
+            return new SuccessResult(Messages.CarImageAdded);
+        }
+        public IResult AddFormFile(CarImage carImage)
+        {
+            carImage.Date = DateTime.Now;
+            foreach (var item in _imageSaveBase.Save(new FormFileProp { Name = FileUtilities.NameGuid(), NewPath = StorageFilePath.GetPathCarImages(), FormFile = carImage.ImageFile }))
+            {
+                carImage.ImagePath = item;
+                _carImageDal.Add(carImage);
+                var result = BusinessRules.Run(CheckIfCarImageLimitExceded(carImage.CarID), CheckIfCarImageOfImageExtension(item));
+                if (result != null)
+                {
+                    return result;
+                }
+            }
+            return new SuccessResult(Messages.CarImageAdded);
+        }
+        public IResult AddFormFileBatch(CarImage carImage)
+        {
+            carImage.Date = DateTime.Now;
+            foreach (var item in _imageSaveBase.Save(new FormFileProp { Name = FileUtilities.NameGuid(), NewPath = StorageFilePath.GetPathCarImages(), FormFiles = carImage.ImageFiles.ToArray() }))
+            {
+                carImage.ImagePath = item;
+                _carImageDal.Add(carImage);
+                var result = BusinessRules.Run(CheckIfCarImageLimitExceded(carImage.CarID), CheckIfCarImageOfImageExtension(item));
+                if (result != null)
+                {
+                    return result;
+                }
+            }
             return new SuccessResult(Messages.CarImageAdded);
         }
 
         public IResult Delete(CarImage carImage)
         {
-            var result = BusinessRules.Run(CheckIfCarImageOfImageDelete(carImage), CheckIfCarImageOfImageExtension(carImage));
+            var result = BusinessRules.Run(CheckIfCarImageOfImageDelete(carImage), CheckIfCarImageOfImageExtension(carImage.ImagePath));
             if (result != null)
             {
                 return result;
@@ -95,16 +137,14 @@ namespace Business.Concrete
             }
             return new SuccessResult();
         }
-        private IResult CheckIfCarImageOfImageExtension(CarImage carImage)
+
+        public static IResult CheckIfCarImageOfImageExtension(string imagePath)
         {
-            if (carImage.ImagePath != null)
-            {
-                string fileExtension = carImage.ImagePath.Substring(carImage.ImagePath.IndexOf("."), carImage.ImagePath.Length - carImage.ImagePath.IndexOf("."));
-                if (!(fileExtension == ".jpg" || fileExtension == ".png" || fileExtension == ".png"))
-                {
-                    return new ErrorResult();
-                }
-            }
+            var extension = imagePath.Substring(imagePath.IndexOf("."), imagePath.Length - imagePath.IndexOf("."));
+
+            bool result = (extension == ".jpg" || extension == ".jpeg" || extension == ".png");
+            if (!result) return new ErrorResult();
+
             return new SuccessResult();
         }
         private IResult CheckIfCarImageOfImageUpload(CarImage carImage)
@@ -116,7 +156,6 @@ namespace Business.Concrete
                 if (File.Exists(path) == true)
                 {
                     File.Delete(path);
-                    BusinessRules.Run(CheckIfCarImageOfImageExtension(carImage));
                     return new SuccessResult();
                 }
             }
@@ -136,27 +175,11 @@ namespace Business.Concrete
             }
             return new ErrorResult(Messages.CarImagesDeleteExceded);
         }
-        private IResult CheckIfCarImageOfImageSave(CarImage carImage)
+
+        public IResult ImageSaveBase(ImageSaveBase imageSaveBase)
         {
-            string fileExtension = carImage.ImagePath.Substring(carImage.ImagePath.IndexOf("."), carImage.ImagePath.Length - carImage.ImagePath.IndexOf("."));
-            string carImageName = Guid.NewGuid().ToString() + fileExtension;
-            string carImagePathAndName = FilePath._carImagePathNoName + carImageName;
-            StreamWriter streamWriter = new StreamWriter(carImagePathAndName);
-            if (System.IO.File.Exists(carImage.ImagePath))
-            {
-                if (string.IsNullOrEmpty(carImage.ImagePath) == false)
-                {
-                    using (FileStream source = System.IO.File.Open(carImage.ImagePath, FileMode.Open))
-                    {
-                        source.CopyTo(streamWriter.BaseStream);
-                        source.Flush();
-                        source.Dispose();
-                        carImage.ImagePath = carImageName;
-                        return new SuccessResult();
-                    }
-                }
-            }
-            return new ErrorResult();
+            _imageSaveBase = imageSaveBase;
+            return new SuccessResult();
         }
     }
     #endregion

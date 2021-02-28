@@ -14,6 +14,9 @@ using Microsoft.AspNetCore.Hosting;
 using Core.Utilities.Results.Abstract;
 using System.Threading;
 using Core.Utilities.File;
+using System.Net.Http.Headers;
+using static Core.Utilities.File.FileUtilities;
+using Core.Utilities.File.Concrete;
 
 namespace WebAPI.Controllers
 {
@@ -33,75 +36,41 @@ namespace WebAPI.Controllers
         [HttpPost("add")]
         public IActionResult Add(CarImage carImage)
         {
-            if (FileUtilities.CheckIfImageFile(carImage.ImagePath))
+            var imageSave = new NormalImageSave();
+            _carImageService.ImageSaveBase(imageSave);
+            var result = _carImageService.Add(carImage);
+            if (result.Success == true)
             {
-                carImage.ImagePath = FileUtilities.ImageSave(carImage.ImagePath, _carImagePathNoName, FileUtilities.NameGuid());
-                var result = _carImageService.Add(carImage);
-                if (result.Success == true)
-                {
-                    return Ok(result);
-                }
-                return BadRequest(result);
+                return Ok(result);
             }
-            else
-            {
-                return BadRequest(new
-                {
-                    Message = "Geçerli bir resim yükleyiniz.",
-                    carImage
-                });
-            }
+            return BadRequest(result);
         }
-        #region FormFile
+        //#region FormFile
         [HttpPost("addformfile")]
         public IActionResult AddBatch([FromForm] CarImage carImage)
         {
-            if (FileUtilities.CheckIfImageFile(carImage.ImageFile))
+            var imageSave = new FormFileImageSave();
+            _carImageService.ImageSaveBase(imageSave);
+            var result = _carImageService.AddFormFile(carImage);
+            if (result.Success == true)
             {
-                carImage.ImagePath = ImageFromFileSave(carImage.ImageFile, _carImagePathNoName, FileUtilities.NameGuid());
-                var result = _carImageService.Add(carImage);
-                if (result.Success == true)
-                {
-                    return Ok(result);
-                }
-                return BadRequest(result);
+                return Ok(result);
             }
-            else
-            {
-                return BadRequest(new
-                {
-                    Message = "Geçerli bir resim yükleyiniz.",
-                    carImage
-                });
-            }
+            return BadRequest(result);
         }
         [HttpPost("addfromfilebatch")]
         public IActionResult AddFormFileBatch([FromForm] CarImage carImage)
         {
-            if (FileUtilities.CheckIfImageFile(carImage.ImageFiles))
+            var imageSave = new FormFilesImageSave();
+            _carImageService.ImageSaveBase(imageSave);
+            var result = _carImageService.AddFormFileBatch(carImage);
+            if (result.Success == true)
             {
-                IResult result = null;
-                foreach (var item in ImageFromFileBatchSave(carImage.ImageFiles, _carImagePathNoName, FileUtilities.NameGuid()))
-                {
-                    carImage.ImagePath = item;
-                    result = _carImageService.Add(carImage);
-                }
-                if (result.Success == true)
-                {
-                    return Ok(result);
-                }
-                return BadRequest(result);
+                return Ok(result);
             }
-            else
-            {
-                return BadRequest(new
-                {
-                    Message = "Geçerli bir resim yükleyiniz.",
-                    carImage
-                });
-            }
+            return BadRequest(result);
         }
-        #endregion
+        //#endregion
         [HttpPost("update")]
         public IActionResult Update(CarImage carImage)
         {
@@ -169,14 +138,14 @@ namespace WebAPI.Controllers
 
         private string ImageFromFileSave(IFormFile formFile, string newPath, string name = null)
         {
-            return FileUtilities.ImageSave(formFile.Name, newPath, name);
+            return FileUtilities.ImageSave(formFile.FileName, newPath, name, formFile);
         }
         private List<string> ImageFromFileBatchSave(List<IFormFile> formFiles, string newPath, string name = null)
         {
             List<string> list = new List<string>();
             foreach (var formFile in formFiles)
             {
-                var result = FileUtilities.ImageSave(formFile.FileName, newPath, name);
+                var result = FileUtilities.ImageSave(formFile.Name, newPath, name);
                 list.Add(result);
             }
             return list;

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Entities.Concrete
 {
-    public class CarImage:IEntity
+    public class CarImage : IEntity
     {
         public int ID { get; set; }
         public int CarID { get; set; }
@@ -18,6 +18,6 @@ namespace Entities.Concrete
         [NotMapped]
         public IFormFile ImageFile { get; set; }
         [NotMapped]
-        public List<IFormFile> ImageFiles { get; set; }
+        public IFormFile[] ImageFiles { get; set; }
     }
 }
