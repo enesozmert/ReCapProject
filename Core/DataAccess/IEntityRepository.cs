@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq.Expressions;
-using Core.Entity;
+using Core.Entities.Concrete;
+using Core.Entities;
 
 namespace Core.DataAccess
 {

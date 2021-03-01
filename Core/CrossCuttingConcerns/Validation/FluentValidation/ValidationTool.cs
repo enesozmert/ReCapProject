@@ -1,4 +1,5 @@
-﻿using Core.Entity;
+﻿using Core.Entities.Concrete;
+using Core.Entities;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrate;
 using FluentValidation;

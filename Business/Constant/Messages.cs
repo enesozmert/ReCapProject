@@ -52,8 +52,17 @@ namespace Business.Constant
         public static string CarImageUpdated = "CarImage updated";
         public static string CarImageLimitExceded = "5 ten fazla araba resminiz olamaz";
         public static string CarImageDateExceded = "Zamanlar eşleşmiyor.";
-        public static string CarImagesDeleteExceded="Resminiz silinmedi";
-        public static string CarImagesUpdateExceded="Resminiz güncellenemedi";
+        public static string CarImagesDeleteExceded = "Resminiz silinmedi";
+        public static string CarImagesUpdateExceded = "Resminiz güncellenemedi";
+        #endregion
+        #region AuthReg
+        public static string AuthorizationDenied = "Yetkiniz yok";
+        public static string UserRegistered = "Kayıt başarılı";
+        public static string UserNotFound = "Kullanıcı yok";
+        public static string PasswordError = "Şifre hatalı";
+        public static string SuccessfulLogin = "Giriş Başarılı";
+        public static string UserAlreadyExists = "Kullanıcı...";
+        public static string AccessTokenCreated = "Accestoken oluşturuldu";
         #endregion
     }
 }
