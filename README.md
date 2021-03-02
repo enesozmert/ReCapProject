@@ -14,5 +14,6 @@ kodlama.io ödevi :  Memeory List için Katmanlı Mimari Özeti
 Result yapısı FluentValidation tool hataları ile birleştirildi.
 
 26.02.2021 arabalar icin resim sitemi kuruldu iş kodları yazıldı istenilen özellikler yazıldı.
+01.03.2021 JWT altyapısı kuruldu ve resim kayıt sistemi strategy desing patterne taşındı.
 
 
