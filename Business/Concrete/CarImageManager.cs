@@ -2,6 +2,7 @@
 using Business.BusinessAspects.Autofac;
 using Business.Constant;
 using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.CancellationToken;
 using Core.Aspects.Autofac.Transaction;
 using Core.Utilities.Business;
 using Core.Utilities.File;
@@ -66,6 +67,7 @@ namespace Business.Concrete
             }
             return new SuccessResult(Messages.CarImageAdded);
         }
+        //[CancellationTokenAspect]
         public IResult AddFormFileBatch(CarImage carImage)
         {
             var files = _imageSaveBase.Save(new FormFileProp { Name = "burayaneyazarsanyaz", NewPath = StorageFilePath.GetPathCarImages(), FormFiles = carImage.ImageFiles.ToArray() });
