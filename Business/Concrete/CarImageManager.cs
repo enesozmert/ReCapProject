@@ -68,7 +68,7 @@ namespace Business.Concrete
         }
         public IResult AddFormFileBatch(CarImage carImage)
         {
-            var files = _imageSaveBase.Save(new FormFileProp { Name = "abc", NewPath = StorageFilePath.GetPathCarImages(), FormFiles = carImage.ImageFiles.ToArray() });
+            var files = _imageSaveBase.Save(new FormFileProp { Name = "burayaneyazarsanyaz", NewPath = StorageFilePath.GetPathCarImages(), FormFiles = carImage.ImageFiles.ToArray() });
             foreach (var item in files)
             {
                 _carImageDal.Add(new CarImage { CarID = carImage.CarID, ImagePath = item, Date = DateTime.Now });
