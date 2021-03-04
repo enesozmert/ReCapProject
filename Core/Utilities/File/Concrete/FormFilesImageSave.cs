@@ -17,6 +17,7 @@ namespace Core.Utilities.File.Concrete
                 {
                     formFileProp.Name = GetFileName(formFileProp.OldPath);
                 }
+                formFileProp.Name = FileUtilities.NameGuid();
                 string carImagePathAndName = formFileProp.NewPath + formFileProp.Name + FileExtension(formFileProp.FormFiles[i].FileName);
                 if (string.IsNullOrEmpty(formFileProp.FormFiles[i].FileName) == false)
                 {

@@ -68,12 +68,10 @@ namespace Business.Concrete
         }
         public IResult AddFormFileBatch(CarImage carImage)
         {
-            carImage.Date = DateTime.Now;
-            var files = _imageSaveBase.Save(new FormFileProp { Name = FileUtilities.NameGuid(), NewPath = StorageFilePath.GetPathCarImages(), FormFiles = carImage.ImageFiles.ToArray() });
+            var files = _imageSaveBase.Save(new FormFileProp { Name = "abc", NewPath = StorageFilePath.GetPathCarImages(), FormFiles = carImage.ImageFiles.ToArray() });
             foreach (var item in files)
             {
-                carImage.ImagePath = item;
-                _carImageDal.Add(new CarImage { CarID=carImage.CarID,ImageFiles});
+                _carImageDal.Add(new CarImage { CarID = carImage.CarID, ImagePath = item, Date = DateTime.Now });
                 var result = BusinessRules.Run(CheckIfCarImageLimitExceded(carImage.CarID), CheckIfCarImageOfImageExtension(item));
                 if (result != null)
                 {
