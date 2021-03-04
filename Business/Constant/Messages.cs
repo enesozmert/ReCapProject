@@ -56,12 +56,12 @@ namespace Business.Constant
         public static string CarImagesUpdateExceded = "Resminiz güncellenemedi";
         #endregion
         #region AuthReg
-        public static string AuthorizationDenied = "Yetkiniz yok";
-        public static string UserRegistered = "Kayıt başarılı";
-        public static string UserNotFound = "Kullanıcı yok";
-        public static string PasswordError = "Şifre hatalı";
-        public static string SuccessfulLogin = "Giriş Başarılı";
-        public static string UserAlreadyExists = "Kullanıcı...";
+        public static string AuthorizationDenied = "You have no authorization";
+        public static string UserRegistered = "Registration Successful";
+        public static string UserNotFound = "No user";
+        public static string PasswordError = "Password is incorrect";
+        public static string SuccessfulLogin = "Login successful";
+        public static string UserAlreadyExists = "User registered";
         public static string AccessTokenCreated = "Accestoken oluşturuldu";
         #endregion
     }

@@ -25,7 +25,6 @@ namespace Core.Utilities.File.Concrete
                 }
                 result[i] = formFileProp.Name + FileExtension(formFileProp.FormFiles[i].FileName);
             }
-
             return result;
         }
     }

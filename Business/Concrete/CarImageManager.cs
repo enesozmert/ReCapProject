@@ -1,5 +1,8 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.Constant;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Transaction;
 using Core.Utilities.Business;
 using Core.Utilities.File;
 using Core.Utilities.File.Concrete;
@@ -27,6 +30,9 @@ namespace Business.Concrete
             _carImageDal = carImageDal;
         }
 
+        [SecuredOperation("product.add,admin")]
+        [CacheRemoveAspect("IPorductService.Get")]
+        [CacheRemoveAspect("IPorductService.GetAll")]
         public IResult Add(CarImage carImage)
         {
             carImage.Date = DateTime.Now;
@@ -63,10 +69,11 @@ namespace Business.Concrete
         public IResult AddFormFileBatch(CarImage carImage)
         {
             carImage.Date = DateTime.Now;
-            foreach (var item in _imageSaveBase.Save(new FormFileProp { Name = FileUtilities.NameGuid(), NewPath = StorageFilePath.GetPathCarImages(), FormFiles = carImage.ImageFiles.ToArray() }))
+            var files = _imageSaveBase.Save(new FormFileProp { Name = FileUtilities.NameGuid(), NewPath = StorageFilePath.GetPathCarImages(), FormFiles = carImage.ImageFiles.ToArray() });
+            foreach (var item in files)
             {
                 carImage.ImagePath = item;
-                _carImageDal.Add(carImage);
+                _carImageDal.Add(new CarImage { CarID=carImage.CarID,ImageFiles});
                 var result = BusinessRules.Run(CheckIfCarImageLimitExceded(carImage.CarID), CheckIfCarImageOfImageExtension(item));
                 if (result != null)
                 {
@@ -86,13 +93,13 @@ namespace Business.Concrete
             _carImageDal.Delete(carImage);
             return new SuccessResult(Messages.CarImageDeleted);
         }
-
+        [CacheAspect]
         public IDataResult<List<CarImage>> GetAll()
         {
 
             return new SuccessDataResult<List<CarImage>>(_carImageDal.GetAll());
         }
-
+        [CacheAspect]
         public IDataResult<CarImage> GetById(int ID)
         {
             return new SuccessDataResult<CarImage>(_carImageDal.Get(p => p.ID == ID));
@@ -118,6 +125,11 @@ namespace Business.Concrete
             }
 
             return new SuccessDataResult<List<CarImage>>(getAllbyCarIdResult);
+        }
+        [TransactionScopeAspect]
+        public IResult AddTransactionalTest(CarImage carImage)
+        {
+            throw new NotImplementedException();
         }
         #region BusinessMethod
         private IResult CheckIfCarImageLimitExceded(int carID)
@@ -181,6 +193,7 @@ namespace Business.Concrete
             _imageSaveBase = imageSaveBase;
             return new SuccessResult();
         }
+
     }
     #endregion
 }

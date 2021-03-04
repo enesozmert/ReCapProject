@@ -58,7 +58,7 @@ namespace WebAPI.Controllers
             }
             return BadRequest(result);
         }
-        [HttpPost("addfromfilebatch")]
+        [HttpPost("addformfilebatch")]
         public IActionResult AddFormFileBatch([FromForm] CarImage carImage)
         {
             var imageSave = new FormFilesImageSave();
