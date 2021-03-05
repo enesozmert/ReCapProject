@@ -17,7 +17,9 @@ namespace Entities.Concrete
 
         [NotMapped]
         public IFormFile ImageFile { get; set; }
+
         [NotMapped]
         public IFormFile[] ImageFiles { get; set; }
+
     }
 }
