@@ -104,7 +104,13 @@ namespace Business.Concrete
         [CacheAspect]
         public IDataResult<CarImage> GetById(int id)
         {
-            return new SuccessDataResult<CarImage>(_carImageDal.Get(p => p.ID == id));
+            var result = _carImageDal.Get(p => p.ID == id);
+            if (result.ImagePath == null)
+            {
+                result.ImagePath = FilePath._carImageNameDefault;
+                return new SuccessDataResult<CarImage>(result);
+            }
+            return new SuccessDataResult<CarImage>(result);
         }
 
         public IResult Update(CarImage carImage)
@@ -135,12 +141,17 @@ namespace Business.Concrete
         }
         public IDataResult<FileStream> View(int id, string url)
         {
+            FileStream stream = null;
             var dataImageName = _carImageDal.Get(p => p.ID == id)?.ImagePath == null ? "RentACarImageDefault.jpg" : _carImageDal.Get(p => p.ID == id)?.ImagePath;
             if (System.IO.File.Exists(url + @"\Temp\" + dataImageName) == false)
             {
                 _imageSaveBase.Save(new FormFileProp { Name = dataImageName.Substring(0, dataImageName.IndexOf(".")), NewPath = url + @"\Temp\", OldPath = StorageFilePath.GetPathCarImages() + dataImageName });
+                stream = System.IO.File.Open(url + @"\Temp\" + dataImageName, FileMode.Open, FileAccess.Read, FileShare.Read);
             }
-            FileStream stream = System.IO.File.Open(url + @"\Temp\" + dataImageName, FileMode.Open, FileAccess.Read, FileShare.Read);
+            else
+            {
+                stream = System.IO.File.Open(url + @"\Temp\" + dataImageName, FileMode.Open, FileAccess.Read, FileShare.Read);
+            }
             return new SuccessDataResult<FileStream>(stream);
         }
         #region BusinessMethod

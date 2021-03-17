@@ -24,12 +24,14 @@ namespace Core.Utilities.File
                     {
                         using (FileStream source = System.IO.File.Open(formFileProp.OldPath, FileMode.Open))
                         {
-                            source.CopyToAsync(streamWriter.BaseStream);
+                            source.CopyTo(streamWriter.BaseStream);
                             source.Flush();
                             source.Dispose();
+                            source.Close();
                         }
                         streamWriter.Flush();
                         streamWriter.Dispose();
+                        streamWriter.Close();
                     }                
                     result[0] = formFileProp.Name + FileExtension(formFileProp.OldPath);                 
                 }
