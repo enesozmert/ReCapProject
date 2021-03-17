@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using System.Linq.Expressions;
-using Entities.DTOs;
+using Entities.Dtos;
 
 namespace DataAccess.Concrate
 {
@@ -53,7 +53,27 @@ namespace DataAccess.Concrate
             return ListedId;
         }
 
+        public List<CarDetailDto> GetCarDetailDtoByXId(Expression<Func<CarDetailDto, bool>> filter = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<CarDetailDto> GetCarDetails()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<CarDetailDto> GetCarDetails(Expression<Func<Car, bool>> filter = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<CarImageDetailDto> GetCarImageDetails(Expression<Func<Car, bool>> filter = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<CarImageDetailDto> GetCarImageDetails(Expression<Func<CarImageDetailDto, bool>> filter = null)
         {
             throw new NotImplementedException();
         }

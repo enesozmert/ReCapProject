@@ -64,5 +64,10 @@ namespace Business.Constant
         public static string UserAlreadyExists = "User registered";
         public static string AccessTokenCreated = "Accestoken oluşturuldu";
         #endregion
+        #region CustomerReg
+        internal static string CustomerAdded = "Customer Added";
+        internal static string CustomerDeleted = "Customer Deleted";
+        internal static string CustomerUpdated = "Customer Updated";
+        #endregion
     }
 }

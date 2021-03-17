@@ -61,30 +61,5 @@ namespace Core.Utilities.File
         {
             return Guid.NewGuid().ToString();
         }
-
-        public static string ImageSave(string oldPath, string newPath, string name = null, IFormFile formFile = null)
-        {
-            if (name == null)
-            {
-                name = GetFileName(oldPath);
-            }
-
-            string carImagePathAndName = newPath + name + FileExtension(oldPath);
-            StreamWriter streamWriter = new StreamWriter(carImagePathAndName);
-            if (string.IsNullOrEmpty(oldPath) == false)
-            {
-                using (FileStream source = System.IO.File.Open(oldPath, FileMode.Open))
-                {
-                    if (formFile != null)
-                    {
-                        formFile.CopyToAsync(streamWriter.BaseStream);
-                    }
-                    source.CopyToAsync(streamWriter.BaseStream);
-                    source.Flush();
-                    source.Dispose();
-                }
-            }
-            return name + FileExtension(oldPath);
-        }
     }
 }

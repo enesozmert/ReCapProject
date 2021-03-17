@@ -18,17 +18,22 @@ namespace Core.Utilities.File
                 }
 
                 string carImagePathAndName = formFileProp.NewPath + formFileProp.Name + FileExtension(formFileProp.OldPath);
-                StreamWriter streamWriter = new StreamWriter(carImagePathAndName);
-                if (string.IsNullOrEmpty(formFileProp.OldPath) == false)
+                if (string.IsNullOrEmpty(formFileProp.OldPath) == false && System.IO.File.Exists(formFileProp.OldPath) == true)
                 {
-                    using (FileStream source = System.IO.File.Open(formFileProp.OldPath, FileMode.Open))
+                    using (StreamWriter streamWriter = new StreamWriter(carImagePathAndName))
                     {
-                        source.CopyToAsync(streamWriter.BaseStream);
-                        source.Flush();
-                        source.Dispose();
-                    }
-                    result[0] = formFileProp.Name + FileExtension(formFileProp.OldPath);
+                        using (FileStream source = System.IO.File.Open(formFileProp.OldPath, FileMode.Open))
+                        {
+                            source.CopyToAsync(streamWriter.BaseStream);
+                            source.Flush();
+                            source.Dispose();
+                        }
+                        streamWriter.Flush();
+                        streamWriter.Dispose();
+                    }                
+                    result[0] = formFileProp.Name + FileExtension(formFileProp.OldPath);                 
                 }
+        
                 return result;
             }
         }

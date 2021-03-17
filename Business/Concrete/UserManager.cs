@@ -6,7 +6,7 @@ using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrate;
 using DataAccess.Abstract;
 using Entities.Concrete;
-using Entities.DTOs;
+using Entities.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Text;

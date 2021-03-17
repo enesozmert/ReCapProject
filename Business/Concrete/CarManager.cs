@@ -5,10 +5,11 @@ using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrate;
 using DataAccess.Abstract;
 using Entities.Concrete;
-using Entities.DTOs;
+using Entities.Dtos;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace Business.Concrete
@@ -44,16 +45,6 @@ namespace Business.Concrete
             return new SuccessDataResult<Car>(_carDal.Get(p => p.ID == carID));
         }
 
-        public IDataResult<List<Car>> GetCarsByBrandId(int BrandID)
-        {
-            return new SuccessDataResult<List<Car>>(_carDal.GetAll(p => p.BrandID == BrandID));
-        }
-
-        public IDataResult<List<Car>> GetCarsByColorId(int ColorID)
-        {
-            return new SuccessDataResult<List<Car>>(_carDal.GetAll(p => p.ColorID == ColorID));
-        }
-
         public IResult Update(Car car)
         {
             _carDal.Update(car);
@@ -63,6 +54,20 @@ namespace Business.Concrete
         public IDataResult<List<CarDetailDto>> GetCarDetails()
         {
             return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails());
+        }
+
+        public IDataResult<List<CarDetailDto>> GetCarDetailsByBrandId(int brandID)
+        {
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(p => p.BrandID == brandID));
+        }
+        public IDataResult<List<CarDetailDto>> GetCarDetailsByColorId(int colorId)
+        {
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(p => p.ColorID == colorId));
+        }
+
+        public IDataResult<List<CarImageDetailDto>> GetCarImageDetails(int carID)
+        {
+            return new SuccessDataResult<List<CarImageDetailDto>>(_carDal.GetCarImageDetails(p => p.CarID == carID));
         }
     }
 }

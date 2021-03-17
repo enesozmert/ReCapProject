@@ -115,41 +115,25 @@ namespace WebAPI.Controllers
             }
             return BadRequest(result);
         }
+        //token süresi ile image sil
+        //bellek , disk
         [HttpGet("view")]
         //[Route("api/Temp/{dataImagePath}")]
         public IActionResult View(int id)
-        {
-            var result = _carImageService.GetById(id);
-            string dataImagePath = result.Data.ImagePath;
-            string fileExtension = dataImagePath.Substring(dataImagePath.IndexOf("."), dataImagePath.Length - dataImagePath.IndexOf("."));
+        {         
+            var imageSave = new NormalImageSave();
+            _carImageService.ImageSaveBase(imageSave);
+            var result = _carImageService.View(id, _env.WebRootPath);
             if (result.Success == true)
             {
-                if (System.IO.File.Exists(_env.WebRootPath + "/Temp/" + dataImagePath) == false)
-                {
-                    FileUtilities.ImageSave(_carImagePathNoName + result.Data.ImagePath, _env.WebRootPath + "/Temp/");
-                }
-                FileStream stream = System.IO.File.Open(_carImagePathNoName + dataImagePath, FileMode.Open);
-                return File(stream, @"image/" + fileExtension.Replace(".", ""));
+                string fileExtension = result.Data.Name.Substring(result.Data.Name.IndexOf("."), result.Data.Name.Length - result.Data.Name.IndexOf("."));
+                return File(result.Data, @"image/" + fileExtension.Replace(".", ""));
             }
-
             return BadRequest(result);
+
         }
         #region Methods
 
-        private string ImageFromFileSave(IFormFile formFile, string newPath, string name = null)
-        {
-            return FileUtilities.ImageSave(formFile.FileName, newPath, name, formFile);
-        }
-        private List<string> ImageFromFileBatchSave(List<IFormFile> formFiles, string newPath, string name = null)
-        {
-            List<string> list = new List<string>();
-            foreach (var formFile in formFiles)
-            {
-                var result = FileUtilities.ImageSave(formFile.Name, newPath, name);
-                list.Add(result);
-            }
-            return list;
-        }
 
         #endregion
 

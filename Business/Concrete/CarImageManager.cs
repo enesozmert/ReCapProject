@@ -16,7 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using Microsoft.AspNetCore.Hosting;
 using static Core.Utilities.File.FileUtilities;
 
 namespace Business.Concrete
@@ -100,9 +102,9 @@ namespace Business.Concrete
             return new SuccessDataResult<List<CarImage>>(_carImageDal.GetAll());
         }
         [CacheAspect]
-        public IDataResult<CarImage> GetById(int ID)
+        public IDataResult<CarImage> GetById(int id)
         {
-            return new SuccessDataResult<CarImage>(_carImageDal.Get(p => p.ID == ID));
+            return new SuccessDataResult<CarImage>(_carImageDal.Get(p => p.ID == id));
         }
 
         public IResult Update(CarImage carImage)
@@ -130,6 +132,16 @@ namespace Business.Concrete
         public IResult AddTransactionalTest(CarImage carImage)
         {
             throw new NotImplementedException();
+        }
+        public IDataResult<FileStream> View(int id, string url)
+        {
+            var dataImageName = _carImageDal.Get(p => p.ID == id)?.ImagePath == null ? "RentACarImageDefault.jpg" : _carImageDal.Get(p => p.ID == id)?.ImagePath;
+            if (System.IO.File.Exists(url + @"\Temp\" + dataImageName) == false)
+            {
+                _imageSaveBase.Save(new FormFileProp { Name = dataImageName.Substring(0, dataImageName.IndexOf(".")), NewPath = url + @"\Temp\", OldPath = StorageFilePath.GetPathCarImages() + dataImageName });
+            }
+            FileStream stream = System.IO.File.Open(url + @"\Temp\" + dataImageName, FileMode.Open, FileAccess.Read, FileShare.Read);
+            return new SuccessDataResult<FileStream>(stream);
         }
         #region BusinessMethod
         private IResult CheckIfCarImageLimitExceded(int carID)
@@ -193,7 +205,6 @@ namespace Business.Concrete
             _imageSaveBase = imageSaveBase;
             return new SuccessResult();
         }
-
     }
     #endregion
 }

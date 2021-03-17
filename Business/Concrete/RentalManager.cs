@@ -8,6 +8,7 @@ using Core.Utilities.Results.Concrate;
 using DataAccess.Abstract;
 using DataAccess.Concrate.EntityFramework;
 using Entities.Concrete;
+using Entities.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -49,6 +50,11 @@ namespace Business.Concrete
         public IDataResult<Rental> GetById(int rentalID)
         {
             return new SuccessDataResult<Rental>(_rentalDal.Get(p => p.ID == rentalID));
+        }
+
+        public IDataResult<List<RentalDetailDto>> GetRentalDetails()
+        {
+            return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetAllRentedCarDto());
         }
 
         public IDataResult<Rental> IsForRent(int rentalID)
