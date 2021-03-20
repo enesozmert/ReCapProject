@@ -64,10 +64,14 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(p => p.ColorID == colorId));
         }
-
         public IDataResult<List<CarImageDetailDto>> GetCarImageDetails(int carID)
         {
             return new SuccessDataResult<List<CarImageDetailDto>>(_carDal.GetCarImageDetails(p => p.CarID == carID));
+        }
+
+        public IDataResult<List<CarDetailDto>> GetCarDetailsByColorAndBrandId(int colorID, int brandID)
+        {
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(p => p.ColorID == colorID && p.BrandID == brandID));
         }
     }
 }
