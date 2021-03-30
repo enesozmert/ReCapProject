@@ -12,7 +12,7 @@ namespace DataAccess.Concrate.EntityFramework
 {
     public class EfRentalDal : EfEntityRepositoryBase<Rental, ReCapDemoContext>, IRentalDal
     {
-        public List<RentalDetailDto> GetAllRentedCarDto(Expression<Func<RentalDetailDto, bool>> filter = null)
+        public List<RentalDetailDto> GetAllRentalDetailDto(Expression<Func<RentalDetailDto, bool>> filter = null)
         {
             using (ReCapDemoContext context = new ReCapDemoContext())
             {

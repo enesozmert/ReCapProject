@@ -34,8 +34,6 @@ namespace Business.Concrete
         }
 
         [SecuredOperation("product.add,admin")]
-        [CacheRemoveAspect("IPorductService.Get")]
-        [CacheRemoveAspect("IPorductService.GetAll")]
         public IResult Add(CarImage carImage)
         {
             carImage.Date = DateTime.Now;
@@ -54,6 +52,7 @@ namespace Business.Concrete
 
             return new SuccessResult(Messages.CarImageAdded);
         }
+        [SecuredOperation("product.add,admin")]
         public IResult AddFormFile(CarImage carImage)
         {
             carImage.Date = DateTime.Now;
@@ -70,6 +69,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.CarImageAdded);
         }
         //[CancellationTokenAspect]
+        [SecuredOperation("admin")]
         public IResult AddFormFileBatch(CarImage carImage)
         {
             var files = _imageSaveBase.Save(new FormFileProp { Name = "burayaneyazarsanyaz", NewPath = StorageFilePath.GetPathCarImages(), FormFiles = carImage.ImageFiles.ToArray() });
@@ -84,7 +84,7 @@ namespace Business.Concrete
             }
             return new SuccessResult(Messages.CarImageAdded);
         }
-
+        [SecuredOperation("admin")]
         public IResult Delete(CarImage carImage)
         {
             var result = BusinessRules.Run(CheckIfCarImageOfImageDelete(carImage), CheckIfCarImageOfImageExtension(carImage.ImagePath));
@@ -98,8 +98,12 @@ namespace Business.Concrete
         [CacheAspect]
         public IDataResult<List<CarImage>> GetAll()
         {
-
-            return new SuccessDataResult<List<CarImage>>(_carImageDal.GetAll());
+            var result = _carImageDal.GetAll(p => p.ImagePath == null);
+            if (result != null)
+            {
+                result = new List<CarImage> { new CarImage { ImagePath = FilePath._carImageNameDefault } };
+            }
+            return new SuccessDataResult<List<CarImage>>(result);
         }
         [CacheAspect]
         public IDataResult<CarImage> GetById(int id)
@@ -112,7 +116,7 @@ namespace Business.Concrete
             }
             return new SuccessDataResult<CarImage>(result);
         }
-
+        [SecuredOperation("admin")]
         public IResult Update(CarImage carImage)
         {
             var result = BusinessRules.Run(CheckIfCarImageLimitExceded(carImage.CarID), CheckIfCarImageOfImageUpload(carImage));
@@ -127,11 +131,10 @@ namespace Business.Concrete
         public IDataResult<List<CarImage>> GetAllByCarId(int carId)
         {
             var getAllbyCarIdResult = _carImageDal.GetAll(p => p.CarID == carId);
-            if (getAllbyCarIdResult.Count == 0)
+            if (getAllbyCarIdResult.Count > 0)
             {
-                return new SuccessDataResult<List<CarImage>>(new List<CarImage> { new CarImage { ImagePath = FilePath._carImageNameDefault } });
+                return new SuccessDataResult<List<CarImage>>(new List<CarImage> { new CarImage { CarID = carId, Date = DateTime.Now, ImagePath = FilePath._carImageNameDefault } });
             }
-
             return new SuccessDataResult<List<CarImage>>(getAllbyCarIdResult);
         }
         [TransactionScopeAspect]

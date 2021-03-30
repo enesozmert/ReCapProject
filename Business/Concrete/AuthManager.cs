@@ -72,5 +72,17 @@ namespace Business.Concrete
             var accessToken = _tokenHelper.CreateToken(user, claims);
             return new SuccessDataResult<AccessToken>(accessToken, Messages.AccessTokenCreated);
         }
+
+        public IDataResult<bool> ValidateToken(string authToken)
+        {
+            //var tokenHandler = new JwtSecurityTokenHandler();
+            //var validationParameters = GetValidationParameters();
+
+            //SecurityToken validatedToken;
+            //IPrincipal principal = tokenHandler.ValidateToken(authToken, validationParameters, out validatedToken);
+            //Thread.CurrentPrincipal = principal;
+            //return true;
+            return null;
+        }
     }
 }

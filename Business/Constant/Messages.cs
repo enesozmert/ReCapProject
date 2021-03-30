@@ -33,8 +33,8 @@ namespace Business.Constant
         //public static string RentalDeletedInvalid = "Rental deleted invalided";
         public static string RentalUpdate = "Rental updated";
         public static string RentalUpdatedInvalid = "Rental updated invalided";
-        public static string IsForRent = "Rental is it for rent//araba teslim edildi";
-        public static string IsForRentInvalid = "Rental is it for rent invalied//araba teslim edilmedi";
+        public static string IsForRent = "This car can be rented";
+        public static string IsForRentInvalid = "This car can not be rented";
         #endregion
         #region BrandReg
         public static string BrandAdded = "Brand added";

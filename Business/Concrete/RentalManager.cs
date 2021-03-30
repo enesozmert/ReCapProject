@@ -3,6 +3,7 @@ using Business.Attributes;
 using Business.Constant;
 using Business.ValidationRules;
 using Core.Aspects.Autofac.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrate;
 using DataAccess.Abstract;
@@ -52,23 +53,19 @@ namespace Business.Concrete
             return new SuccessDataResult<Rental>(_rentalDal.Get(p => p.ID == rentalID));
         }
 
-        public IDataResult<List<RentalDetailDto>> GetRentalDetails()
+        public IDataResult<List<RentalDetailDto>> GetAllRentalDetails()
         {
-            return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetAllRentedCarDto());
+            return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetAllRentalDetailDto());
         }
 
-        public IDataResult<Rental> IsForRent(int rentalID)
+        public IDataResult<Rental> IsForRent(int carID)
         {
-            IDataResult<Rental> dataResult = null;
-            if (_rentalDal.Get(p => p.ID == rentalID).ReturnDate == null)
+            if (_rentalDal.Get(p => p.ID == carID).ReturnDate == null)
             {
-                dataResult = new ErrorDataResult<Rental>(_rentalDal.Get(p => p.ID == rentalID), Messages.IsForRentInvalid);
+                return new ErrorDataResult<Rental>(_rentalDal.Get(p => p.CarID == carID), Messages.IsForRentInvalid);
             }
-            else if (_rentalDal.Get(p => p.ID == rentalID).ReturnDate != null)
-            {
-                dataResult = new SuccessDataResult<Rental>(_rentalDal.Get(p => p.ID == rentalID), Messages.IsForRent);
-            }
-            return dataResult;
+
+            return new SuccessDataResult<Rental>(_rentalDal.Get(p => p.CarID == carID), Messages.IsForRent);
         }
 
         public IResult Update(Rental rental)
@@ -81,5 +78,24 @@ namespace Business.Concrete
             _rentalDal.Update(result);
             return new SuccessResult(Messages.RentalUpdate);
         }
+
+        public IResult IsRentedByCarId(int carID)
+        {
+            var result = BusinessRules.Run(CheckIsRentedToCarId(carID));
+            if (result != null)
+            { return result; }
+            return new SuccessResult(Messages.IsForRent);
+        }
+        #region Business
+        public IResult CheckIsRentedToCarId(int carID)
+        {
+            var result = _rentalDal.Get(p => p.CarID == carID);
+            if (result.ReturnDate != null)
+            {
+                return new SuccessResult(Messages.IsForRent);
+            }
+            return new ErrorResult(Messages.IsForRentInvalid);
+        }
+        #endregion
     }
 }

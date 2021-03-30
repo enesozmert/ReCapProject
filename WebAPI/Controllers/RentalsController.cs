@@ -76,19 +76,29 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("isforrent")]
-        public IActionResult IsForRent(int id)
+        public IActionResult IsForRent(int carId)
         {
-            var result = _rentalService.IsForRent(id);
+            var result = _rentalService.IsForRent(carId);
             if (result.Success)
             {
                 return Ok(result);
             }
             return BadRequest(result);
         }
-        [HttpGet("getrentaldetails")]
-        public IActionResult GetRentalDetails()
+        [HttpGet("isrentedbycarId")]
+        public IActionResult IsRentedByCarId(int carId)
         {
-            var result = _rentalService.GetRentalDetails();
+            var result = _rentalService.IsRentedByCarId(carId);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+        [HttpGet("getallrentaldetails")]
+        public IActionResult GetAllRentalDetails()
+        {
+            var result = _rentalService.GetAllRentalDetails();
             if (result.Success)
             {
                 return Ok(result);

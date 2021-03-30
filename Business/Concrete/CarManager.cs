@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.Constant;
 using Business.ValidationRules;
 using Core.Utilities.Results.Abstract;
@@ -22,7 +23,7 @@ namespace Business.Concrete
         {
             _carDal = carDal;
         }
-
+        [SecuredOperation("admin")]
         public IResult Add(Car car)
         {
             _carDal.Add(car);
@@ -69,9 +70,14 @@ namespace Business.Concrete
             return new SuccessDataResult<List<CarImageDetailDto>>(_carDal.GetCarImageDetails(p => p.CarID == carID));
         }
 
-        public IDataResult<List<CarDetailDto>> GetCarDetailsByColorAndBrandId(int colorID, int brandID)
+        public IDataResult<List<CarDetailDto>> GetCarDetailsByColorOrBrandId(int colorID, int brandID)
         {
-            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(p => p.ColorID == colorID && p.BrandID == brandID));
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(p => p.ColorID == colorID || p.BrandID == brandID));
+        }
+
+        public IDataResult<CarDetailDto> GetCarDetailsById(int carID)
+        {
+            return new SuccessDataResult<CarDetailDto>(_carDal.GetCarDetails(p => p.ID == carID)[0]);
         }
     }
 }
