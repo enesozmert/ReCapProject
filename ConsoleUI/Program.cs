@@ -2,7 +2,7 @@
 using Business.Concrete;
 using Business.HandleException;
 using DataAccess.Concrate;
-using DataAccess.Concrate.EntityFramework;
+using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
 using System;
 

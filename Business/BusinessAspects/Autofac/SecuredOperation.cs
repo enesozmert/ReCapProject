@@ -12,6 +12,7 @@ using Castle.DynamicProxy;
 namespace Business.BusinessAspects.Autofac
 {
     //JWT
+    //TODO : Burda httpaccessor ile httpden gelen role http ile kıyaslanır.
     public class SecuredOperation : MethodInterception
     {
         private string[] _roles;

@@ -7,13 +7,12 @@ using Core.Utilities.Business;
 using Core.Utilities.Results.Abstract;
 using Core.Utilities.Results.Concrate;
 using DataAccess.Abstract;
-using DataAccess.Concrate.EntityFramework;
 using Entities.Concrete;
 using Entities.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Text;
-
+using System.Linq;
 namespace Business.Concrete
 {
     public class RentalManager : IRentalService
@@ -58,14 +57,43 @@ namespace Business.Concrete
             return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetAllRentalDetailDto());
         }
 
-        public IDataResult<Rental> IsForRent(int carID)
+        public IDataResult<bool> IsForRent(int carID)
         {
-            if (_rentalDal.Get(p => p.ID == carID).ReturnDate == null)
+            bool isForRent = false;
+            var isDateCreated = _rentalDal.GetAll(p => p.CarID == carID).Any(p => p.CarID == carID);
+            if (isDateCreated)
             {
-                return new ErrorDataResult<Rental>(_rentalDal.Get(p => p.CarID == carID), Messages.IsForRentInvalid);
+                var result = _rentalDal.Get(k => k.CarID == carID && k.ReturnDate != null);
+                if (result != null)
+                {
+                    isForRent = true;
+                    return new SuccessDataResult<bool>(isForRent, Messages.IsForRent);
+                    //return new ErrorDataResult<bool>(_rentalDal.Get(p => p.CarID == carID), Messages.IsForRentInvalid);
+                }
+                isForRent = false;
+                return new SuccessDataResult<bool>(isForRent, Messages.IsForRent);
             }
-
-            return new SuccessDataResult<Rental>(_rentalDal.Get(p => p.CarID == carID), Messages.IsForRent);
+            isForRent = true;
+            return new SuccessDataResult<bool>(isForRent, Messages.IsForRent);
+        }
+        public IDataResult<bool> IsForRentCompany(Rental rental)
+        {
+            bool isForRent = false;
+            var isDateCreated = _rentalDal.GetAll(p => p.CarID == rental.CarID).Any(p => p.CarID == rental.CarID);
+            if (isDateCreated)
+            {
+                var result = _rentalDal.Get(k => k.CarID == rental.CarID && k.CustomerID == rental.CustomerID && k.ReturnDate != null);
+                if (result != null)
+                {
+                    isForRent = true;
+                    return new SuccessDataResult<bool>(isForRent, Messages.IsForRent);
+                    //return new ErrorDataResult<bool>(_rentalDal.Get(p => p.CarID == carID), Messages.IsForRentInvalid);
+                }
+                isForRent = false;
+                return new SuccessDataResult<bool>(isForRent, Messages.IsForRent);
+            }
+            isForRent = true;
+            return new SuccessDataResult<bool>(isForRent, Messages.IsForRent);
         }
 
         public IResult Update(Rental rental)
@@ -95,6 +123,11 @@ namespace Business.Concrete
                 return new SuccessResult(Messages.IsForRent);
             }
             return new ErrorResult(Messages.IsForRentInvalid);
+        }
+
+        public IDataResult<RentalDetailDto> GetRentalDetailsByCarId(int carId)
+        {
+            return new SuccessDataResult<RentalDetailDto>(_rentalDal.GetRentalDetailDto(p => p.CarID == carId));
         }
         #endregion
     }

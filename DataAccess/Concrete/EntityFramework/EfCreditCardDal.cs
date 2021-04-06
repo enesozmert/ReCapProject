@@ -7,7 +7,7 @@ using System.Text;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfBrandDal:EfEntityRepositoryBase<Brand,ReCapDemoContext>,IBrandDal
+    public class EfCreditCardDal: EfEntityRepositoryBase<CreditCard,ReCapDemoContext>,ICreditCardDal
     {
 
     }

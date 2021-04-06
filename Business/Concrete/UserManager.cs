@@ -22,6 +22,7 @@ namespace Business.Concrete
             _userDal = userDal;
         }
 
+
         public IResult Add(User user)
         {
             _userDal.Add(user);

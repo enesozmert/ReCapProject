@@ -14,8 +14,10 @@ namespace Business.Abstract
         IResult Update(Rental rental);
         IResult Delete(Rental rental);
         IDataResult<Rental> GetById(int rentalID);
-        IDataResult<Rental> IsForRent(int carID);
+        IDataResult<bool> IsForRent(int carID);
+        IDataResult<bool> IsForRentCompany(Rental rental);
         IDataResult<List<RentalDetailDto>> GetAllRentalDetails();
+        IDataResult<RentalDetailDto> GetRentalDetailsByCarId(int carId);
         IResult IsRentedByCarId(int carID);
     }
 }

@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 using System.Linq;
 using System.Text;
 
-namespace DataAccess.Concrate.EntityFramework
+namespace DataAccess.Concrete.EntityFramework
 {
     public class EfCustomerDal : EfEntityRepositoryBase<Customer, ReCapDemoContext>, ICustomerDal
     {

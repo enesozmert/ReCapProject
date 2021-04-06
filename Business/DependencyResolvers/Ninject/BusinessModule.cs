@@ -1,7 +1,6 @@
 ﻿using Business.Abstract;
 using Business.Concrete;
 using DataAccess.Abstract;
-using DataAccess.Concrate.EntityFramework;
 using Ninject.Modules;
 using System;
 using System.Collections.Generic;

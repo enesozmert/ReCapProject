@@ -16,7 +16,7 @@ namespace Core.DependencyResolvers.Autofac
         public void Load(IServiceCollection serviceCollection)
         {
             serviceCollection.AddMemoryCache();
-            serviceCollection.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
+            serviceCollection.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             serviceCollection.AddSingleton<ICacheManager, MemoryCacheManager>();
             serviceCollection.AddSingleton<Stopwatch>();
         }

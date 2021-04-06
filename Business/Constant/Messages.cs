@@ -65,9 +65,14 @@ namespace Business.Constant
         public static string AccessTokenCreated = "Accestoken oluşturuldu";
         #endregion
         #region CustomerReg
-        internal static string CustomerAdded = "Customer Added";
-        internal static string CustomerDeleted = "Customer Deleted";
-        internal static string CustomerUpdated = "Customer Updated";
+        public static string CustomerAdded = "Customer Added";
+        public static string CustomerDeleted = "Customer Deleted";
+        public static string CustomerUpdated = "Customer Updated";
+        #endregion
+        #region CreditCardReg
+        public static string CreditCardAdded="Credit Card Added";
+        public static string CreditCardDelete= "Credit Card Deleted";
+        public static string CreditCardUpdated= "Credit Card Updated";
         #endregion
     }
 }

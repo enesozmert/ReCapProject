@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DataAccess.Concrate.EntityFramework
+namespace DataAccess.Concrete.EntityFramework
 {
     public class EfCarImageDal:EfEntityRepositoryBase<CarImage, ReCapDemoContext>,ICarImageDal
     {

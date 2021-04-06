@@ -21,8 +21,9 @@ namespace Business.Concrete
         {
             _brandDal = rentalDal;
         }
-        [SecuredOperation("admin")]
+        
         [ValidationAspect(typeof(BrandValidator))]
+        [SecuredOperation("admin")]
         public IResult Add(Brand brand)
         {
             _brandDal.Add(brand);
@@ -47,7 +48,7 @@ namespace Business.Concrete
 
         public IResult Update(Brand brand)
         {
-            _brandDal.Delete(brand);
+            _brandDal.Update(brand);
             return new SuccessResult(Messages.BrandUpdated);
         }
     }
